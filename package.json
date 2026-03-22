@@ -1,0 +1,22 @@
+{
+  "name": "mountain-storage-dashboard",
+  "version": "1.0.0",
+  "description": "Mountain Storage — Operations Dashboard (GitHub Pages + JSON-driven data + GitHub Actions refresh scripts).",
+  "main": "index.html",
+  "scripts": {
+    "refresh:reviews": "node scripts/refresh-reviews.js",
+    "refresh:competitors": "node scripts/refresh-competitors.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "storage",
+    "dashboard",
+    "Chart.js",
+    "Leaflet",
+    "GitHub Pages"
+  ],
+  "author": "Mountain Storage",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
