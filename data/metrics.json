@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-03-21T00:00:00-05:00",
+  "as_of": "2026-03-22T00:00:00-05:00",
   "facility": {
     "name": "Mountain Storage",
     "location": "Hot Springs, AR",
@@ -13,7 +13,8 @@
     "move_ins_month": 2,
     "move_outs_month": 0,
     "storage_revenue_mtd": 2887,
-        "uhaul_revenue_mtd": 828,
+    "uhaul_revenue_mtd": 4568,
+    "uhaul_commission_mtd": 939,
     "delinquent_balance": 0,
     "monthly_rent_potential": 5765
   },
@@ -41,19 +42,19 @@
     {
       "week_of": "2026-03-02",
       "storage": 910,
-            "uhaul": 220,
+      "uhaul": 1680,
       "other": 0
     },
     {
       "week_of": "2026-03-09",
       "storage": 870,
-            "uhaul": 190,
+      "uhaul": 1290,
       "other": 0
     },
     {
       "week_of": "2026-03-16",
       "storage": 157,
-            "uhaul": 208,
+      "uhaul": 1598,
       "other": 0
     }
   ],
@@ -63,10 +64,10 @@
     { "week_of": "2026-03-09", "units_turned": 2 },
     { "week_of": "2026-03-16", "units_turned": 1 }
   ],
-      "uhaul_equipment_mix": [
-    { "type": "Trucks", "count": 11, "revenue_mtd": 568 },
-    { "type": "Trailers", "count": 6, "revenue_mtd": 180 },
-    { "type": "Auto Transports", "count": 2, "revenue_mtd": 80 }
+  "uhaul_equipment_mix": [
+    { "type": "Trucks", "count": 23, "revenue_mtd": 3612 },
+    { "type": "Trailers", "count": 10, "revenue_mtd": 746 },
+    { "type": "Auto Transports", "count": 3, "revenue_mtd": 210 }
   ],
   "occupancy_by_unit_type": [
     { "type": "5x10", "climate": false, "occupied": 6, "total": 22 },
@@ -171,9 +172,9 @@
   "uhaul_breakdown": {
     "truck_turnovers": [
       { "week_of": "2026-02-24", "pickups": 9, "returns": 8 },
-      { "week_of": "2026-03-02", "pickups": 11, "returns": 10 },
-      { "week_of": "2026-03-09", "pickups": 7, "returns": 6 },
-      { "week_of": "2026-03-16", "pickups": 5, "returns": 5 }
+      { "week_of": "2026-03-02", "pickups": 14, "returns": 13 },
+      { "week_of": "2026-03-09", "pickups": 11, "returns": 10 },
+      { "week_of": "2026-03-16", "pickups": 13, "returns": 12 }
     ],
     "dealer_rotation": [
       { "equipment": "10ft Truck", "in_fleet": 3, "avg_days_on_lot": 4.1 },
@@ -182,10 +183,18 @@
       { "equipment": "Car Hauler", "in_fleet": 2, "avg_days_on_lot": 6.2 }
     ],
     "commission": {
-      "mtd_rentals": 26,
-      "mtd_gross_revenue": 828,
-      "mtd_commission": 248.4,
-      "commission_rate": 0.30
+      "mtd_rentals": 38,
+      "mtd_gross_revenue": 4568,
+      "mtd_commission": 939,
+      "base_commission": 756.19,
+      "override_incentive_pct": 4,
+      "override_incentive": 182.73,
+      "commission_breakdown": {
+        "truck_commission": 541.82,
+        "trailer_sri_commission": 69.40,
+        "oneway_trailer_commission": 103.00,
+        "at_td_commission": 41.97
+      }
     }
   },
   "weather": {

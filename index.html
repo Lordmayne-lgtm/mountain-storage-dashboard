@@ -20,7 +20,9 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <!-- Upload sections -->     <script src="assets/js/upload-sections.js" defer></script>      <!-- Lucide icons -->
+  <!-- SheetJS for CSV/Excel parsing -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
 
   <style>
@@ -874,9 +876,9 @@
             <div class="revenue-banner">
               <div>
                 <div class="revenue-label">Month-To-Date Revenue</div>
-                <div id="mtd-total" class="revenue-amount">$3,826</div>
+                <div id="mtd-total" class="revenue-amount">$7,455</div>
                 <div id="mtd-breakdown" class="revenue-breakdown">
-                  Storage $2,887 · U-Haul $828 · Potential Rent $5,765
+                  Storage $2,887 · U-Haul $4,568 · Potential Rent $5,765
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
@@ -918,7 +920,7 @@
               </div>
               <div class="kpi-card">
                 <div class="kpi-label">U-Haul Revenue</div>
-                <div id="kpi-uhaul-rev" class="kpi-value">$828</div>
+                <div id="kpi-uhaul-rev" class="kpi-value">$4,568</div>
                 <div class="kpi-meta">Month-to-date</div>
                 <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;"></div></div>
               </div>
@@ -1160,39 +1162,9 @@
   </div><!-- /app-shell -->
 
   <script>if(window.Chart){Chart.defaults.responsive=true;Chart.defaults.maintainAspectRatio=false;}</script>
-  <script src="assets/js/data-loader.js"></script>   <script src="assets/js/upload-sections.js"></script>
+  <script src="assets/js/data-loader.js"></script>
+  <script src="assets/js/file-parser.js"></script>
 
-    <script>
-  /* Drag-and-drop upload handlers */
-  (function(){
-    function setupDrop(dropId, inputId, statusId, label) {
-      var drop = document.getElementById(dropId);
-      var input = document.getElementById(inputId);
-      var status = document.getElementById(statusId);
-      if (!drop || !input || !status) return;
-      function highlight() { drop.style.borderColor='var(--accent)'; drop.style.background='var(--accent-dim)'; }
-      function unhighlight() { drop.style.borderColor='var(--border-strong)'; drop.style.background='var(--bg-raised)'; }
-      function handleFile(file) {
-        if (!file) return;
-        var ext = file.name.split('.').pop().toLowerCase();
-        if (['csv','xlsx','xls'].indexOf(ext) === -1) {
-          status.style.color = 'var(--red)';
-          status.textContent = 'Invalid file type. Use CSV or Excel.';
-          return;
-        }
-        status.style.color = 'var(--green)';
-        status.textContent = '\u2705 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB) ready';
-      }
-      drop.addEventListener('dragover', function(e){ e.preventDefault(); highlight(); });
-      drop.addEventListener('dragleave', function(e){ e.preventDefault(); unhighlight(); });
-      drop.addEventListener('drop', function(e){ e.preventDefault(); unhighlight(); if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
-      input.addEventListener('change', function(){ if(input.files.length) handleFile(input.files[0]); });
-    }
-    document.addEventListener('DOMContentLoaded', function(){
-      setupDrop('drop-uhaul','file-uhaul','uhaul-upload-status','U-Haul');
-      setupDrop('drop-wss','file-wss','wss-upload-status','WebSelfStorage');
-    });
-  })();
-  </script>
+
 </body>
 </html>
