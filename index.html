@@ -418,7 +418,7 @@
       margin-top: 8px;
     }
 
-    .chart-wrap {
+    .chart-wrap { position: relative;
       border-radius: 0.9rem;
       border: 1px solid rgba(148, 163, 184, 0.5);
       background: linear-gradient(145deg, #020617, #020617);
@@ -1211,6 +1211,6 @@
   </div>
 
   <!-- Data loader and dashboard logic -->
-  <script src="assets/js/data-loader.js"></script>
+  <script>if(window.Chart){Chart.defaults.responsive=true;Chart.defaults.maintainAspectRatio=false;}</script>     <script src="assets/js/data-loader.js"></script>
 </body>
 </html>
