@@ -1,0 +1,232 @@
+{
+  "as_of": "2026-03-21T00:00:00-05:00",
+  "facility": {
+    "name": "Mountain Storage",
+    "location": "Hot Springs, AR",
+    "address": "6422 Central Ave",
+    "timezone": "America/Chicago"
+  },
+  "kpis": {
+    "occupancy_pct": 25.9,
+    "occupied_units": 45,
+    "total_units": 174,
+    "move_ins_month": 2,
+    "move_outs_month": 0,
+    "storage_revenue_mtd": 2887,
+    "uha ul_revenue_mtd": 828,
+    "delinquent_balance": 0,
+    "monthly_rent_potential": 5765,
+    "mtd_total_revenue": 3715
+  },
+  "occupancy_trend": [
+    { "date": "2026-03-01", "occupancy_pct": 22.0 },
+    { "date": "2026-03-04", "occupancy_pct": 22.8 },
+    { "date": "2026-03-08", "occupancy_pct": 23.4 },
+    { "date": "2026-03-12", "occupancy_pct": 24.1 },
+    { "date": "2026-03-16", "occupancy_pct": 24.9 },
+    { "date": "2026-03-20", "occupancy_pct": 25.9 }
+  ],
+  "move_activity_weekly": [
+    { "week_of": "2026-02-24", "move_ins": 1, "move_outs": 0 },
+    { "week_of": "2026-03-02", "move_ins": 1, "move_outs": 0 },
+    { "week_of": "2026-03-09", "move_ins": 0, "move_outs": 0 },
+    { "week_of": "2026-03-16", "move_ins": 0, "move_outs": 0 }
+  ],
+  "weekly_revenue": [
+    {
+      "week_of": "2026-02-24",
+      "storage": 950,
+      "uha ul": 210,
+      "other": 0
+    },
+    {
+      "week_of": "2026-03-02",
+      "storage": 910,
+      "uha ul": 220,
+      "other": 0
+    },
+    {
+      "week_of": "2026-03-09",
+      "storage": 870,
+      "uha ul": 190,
+      "other": 0
+    },
+    {
+      "week_of": "2026-03-16",
+      "storage": 157,
+      "uha ul": 208,
+      "other": 0
+    }
+  ],
+  "weekly_turnovers": [
+    { "week_of": "2026-02-24", "units_turned": 3 },
+    { "week_of": "2026-03-02", "units_turned": 4 },
+    { "week_of": "2026-03-09", "units_turned": 2 },
+    { "week_of": "2026-03-16", "units_turned": 1 }
+  ],
+  "uha ul_equipment_mix": [
+    { "type": "Trucks", "count": 11, "revenue_mtd": 568 },
+    { "type": "Trailers", "count": 6, "revenue_mtd": 180 },
+    { "type": "Auto Transports", "count": 2, "revenue_mtd": 80 }
+  ],
+  "occupancy_by_unit_type": [
+    { "type": "5x10", "climate": false, "occupied": 6, "total": 22 },
+    { "type": "10x10", "climate": false, "occupied": 10, "total": 40 },
+    { "type": "10x15", "climate": false, "occupied": 9, "total": 32 },
+    { "type": "10x15", "climate": true, "occupied": 4, "total": 12 },
+    { "type": "10x20", "climate": false, "occupied": 8, "total": 36 },
+    { "type": "Parking", "climate": false, "occupied": 8, "total": 32 }
+  ],
+  "competition_summary": {
+    "local_facilities": 11,
+    "average_nc_10x10": 60,
+    "average_cc_10x10": 104,
+    "your_nc_10x10": 80,
+    "your_cc_10x15": 150,
+    "market_position": "mid-range",
+    "pricing_notes": "Mini Mall and New Frontier offer aggressive teaser specials on non-climate units; Modern Storage is premium climate with the highest rates in the market."
+  },
+  "google_reviews_summary": {
+    "your_rating": 5.0,
+    "your_review_count": 26,
+    "market_avg_rating": 4.5,
+    "market_avg_review_count": 62,
+    "highest_competitor_rating": 5.0,
+    "lowest_competitor_rating": 4.0
+  },
+  "office_hours_summary": {
+    "your_weekly_hours": 44,
+    "your_days_open": 5,
+    "has_sunday_office": true,
+    "market_avg_weekly_hours": 46,
+    "facilities_with_sunday_office": 2,
+    "notes": "Mountain Storage is one of few locations with staffed Sunday hours and on-site U-Haul."
+  },
+  "office_hours_heatmap": {
+    "facilities": [
+      "Mountain Storage",
+      "Mini Mall",
+      "Secure Space",
+      "Hwy 7 South",
+      "Modern Storage",
+      "New Frontier",
+      "Central Access",
+      "S&S Moore",
+      "S&S Pearcy",
+      "Lake Hamilton",
+      "Malvern Ave"
+    ],
+    "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "matrix": [
+      [1, 0, 0, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 0, 0],
+      [1, 1, 1, 1, 1, 1, 0],
+      [1, 1, 0, 1, 1, 1, 0],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 0],
+      [1, 1, 0, 1, 1, 1, 0],
+      [1, 1, 0, 1, 1, 0, 0],
+      [1, 1, 0, 1, 1, 0, 0],
+      [1, 1, 0, 1, 1, 0, 0],
+      [1, 1, 0, 1, 1, 0, 0]
+    ]
+  },
+  "tenant_snapshot": [
+    {
+      "unit": "101",
+      "name": "J. Thompson",
+      "start_date": "2026-02-10",
+      "type": "10x10",
+      "climate": false,
+      "rate": 80,
+      "status": "current"
+    },
+    {
+      "unit": "115",
+      "name": "C. Ramirez",
+      "start_date": "2026-01-28",
+      "type": "5x10",
+      "climate": false,
+      "rate": 60,
+      "status": "current"
+    },
+    {
+      "unit": "143",
+      "name": "D. Nguyen",
+      "start_date": "2025-11-02",
+      "type": "10x15",
+      "climate": true,
+      "rate": 150,
+      "status": "current"
+    },
+    {
+      "unit": "204",
+      "name": "S. Patel",
+      "start_date": "2026-03-03",
+      "type": "Parking",
+      "climate": false,
+      "rate": 65,
+      "status": "new"
+    }
+  ],
+  "uha ul_breakdown": {
+    "truck_turnovers": [
+      { "week_of": "2026-02-24", "pickups": 9, "returns": 8 },
+      { "week_of": "2026-03-02", "pickups": 11, "returns": 10 },
+      { "week_of": "2026-03-09", "pickups": 7, "returns": 6 },
+      { "week_of": "2026-03-16", "pickups": 5, "returns": 5 }
+    ],
+    "dealer_rotation": [
+      { "equipment": "10ft Truck", "in_fleet": 3, "avg_days_on_lot": 4.1 },
+      { "equipment": "15ft Truck", "in_fleet": 4, "avg_days_on_lot": 3.4 },
+      { "equipment": "20ft Truck", "in_fleet": 2, "avg_days_on_lot": 5.0 },
+      { "equipment": "Car Hauler", "in_fleet": 2, "avg_days_on_lot": 6.2 }
+    ],
+    "commission": {
+      "mtd_rentals": 26,
+      "mtd_gross_revenue": 828,
+      "mtd_commission": 248.4,
+      "commission_rate": 0.30
+    }
+  },
+  "weather": {
+    "location": "Hot Springs, AR",
+    "current_temp_f": 64,
+    "current_conditions": "Partly cloudy",
+    "wind_mph": 6,
+    "humidity_pct": 58,
+    "rain_chance_pct": 20,
+    "feels_like_f": 64,
+    "high_f": 68,
+    "low_f": 51,
+    "forecast": [
+      { "day": "Sat", "high_f": 68, "low_f": 51, "conditions": "🌤" },
+      { "day": "Sun", "high_f": 70, "low_f": 52, "conditions": "🌦" },
+      { "day": "Mon", "high_f": 72, "low_f": 53, "conditions": "☁️" },
+      { "day": "Tue", "high_f": 74, "low_f": 55, "conditions": "🌤" },
+      { "day": "Wed", "high_f": 73, "low_f": 54, "conditions": "🌧" },
+      { "day": "Thu", "high_f": 71, "low_f": 52, "conditions": "🌦" },
+      { "day": "Fri", "high_f": 69, "low_f": 50, "conditions": "🌤" }
+    ]
+  },
+  "rental_alerts": [
+    {
+      "id": "low-occupancy",
+      "severity": "info",
+      "title": "Occupancy at 25.9%",
+      "message": "Plenty of vacancy remaining — keep 50% off first 3 months promo active and monitor weekly move-ins."
+    },
+    {
+      "id": "spring-demand",
+      "severity": "success",
+      "title": "Spring rental season starting",
+      "message": "Historically strongest move-in period for Hot Springs market — watch 10x10 and 10x15 demand."
+    },
+    {
+      "id": "uha ul-opportunity",
+      "severity": "warning",
+      "title": "U-Haul fleet underutilized Tue–Wed",
+      "message": "Consider midweek special or local business outreach to drive truck rentals."
+    }
+  ]
+}
