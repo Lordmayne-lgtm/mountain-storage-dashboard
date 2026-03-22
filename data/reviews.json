@@ -1,127 +1,81 @@
 {
-  "last_updated": "2026-03-21T00:00:00-05:00",
+  "last_updated": "2026-03-22T18:59:47.323Z",
   "facilities": [
     {
       "name": "Mountain Storage",
-      "source": "google_and_uhaul",
-      "google_place_id": "YOUR_MOUNTAIN_STORAGE_PLACE_ID",
-      "google_rating": 5.0,
-      "google_review_count": 26,
-      "google_reviews": [
-        {
-          "author": "Tyler W.",
-          "rating": 5,
-          "date": "2026-03-10",
-          "text": "Super clean facility with easy access and a really friendly owner. Being able to grab a U-Haul truck on site made move-in painless."
-        },
-        {
-          "author": "Megan L.",
-          "rating": 5,
-          "date": "2026-03-02",
-          "text": "Love the 24/7 gate access and cameras everywhere. Check-in was quick and the unit was spotless."
-        },
-        {
-          "author": "R. Johnson",
-          "rating": 5,
-          "date": "2026-02-18",
-          "text": "Booked online and signed everything over my phone. Gate code worked immediately, and the unit was exactly as described."
-        }
-      ],
-      "uha ul_rating": 4.9,
-      "uha ul_review_count": 22,
-      "uha ul_reviews": [
-        {
-          "author": "David H.",
-          "rating": 5,
-          "date": "2026-03-11",
-          "text": "Best U-Haul dealer in Hot Springs. Truck was ready, clean, and they helped me hook up the trailer safely."
-        },
-        {
-          "author": "Kim S.",
-          "rating": 5,
-          "date": "2026-02-27",
-          "text": "In and out in under 10 minutes. Staff walked me through everything and did a quick inspection on return."
-        }
-      ]
+      "google_place_id": "ChIJjeBQawArM4YR74Wn2wR_1RY",
+      "google_rating": null,
+      "google_review_count": 0,
+      "google_reviews": []
     },
     {
       "name": "Mini Mall Storage",
-      "source": "google",
-      "google_place_id": "MINI_MALL_PLACE_ID",
-      "google_rating": 4.7,
-      "google_review_count": 19,
+      "google_place_id": "ChIJd46H4ljVMoYRLBgAyr4nIWA",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "Secure Space Storage",
-      "source": "google",
-      "google_place_id": "SECURE_SPACE_PLACE_ID",
-      "google_rating": 5.0,
-      "google_review_count": 5,
+      "google_place_id": "ChIJLxAIsIDVMoYRBtrvbr2SLE0",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "Hwy 7 South Storage",
-      "source": "google",
-      "google_place_id": "HWY7_SOUTH_PLACE_ID",
-      "google_rating": 4.6,
-      "google_review_count": 16,
+      "google_place_id": "ChIJdbKxCJ7VMoYRKP3zNSEno-E",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "Modern Storage",
-      "source": "google",
-      "google_place_id": "MODERN_STORAGE_PLACE_ID",
-      "google_rating": 4.9,
-      "google_review_count": 244,
+      "google_place_id": "ChIJncH3MQbVMoYRLi7t8jXJGfw",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "New Frontier",
-      "source": "google",
-      "google_place_id": "NEW_FRONTIER_PLACE_ID",
-      "google_rating": 4.5,
-      "google_review_count": 147,
+      "google_place_id": "ChIJ_6XC5jjVMoYRZaVYEW0_9CI",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "Central Access Storage",
-      "source": "google",
-      "google_place_id": "CENTRAL_ACCESS_PLACE_ID",
-      "google_rating": 4.3,
-      "google_review_count": 133,
+      "google_place_id": "ChIJEwHBiDvVMoYRiFT3GaQNhZo",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "S&S Storage S Moore",
-      "source": "google",
-      "google_place_id": "SS_MOORE_PLACE_ID",
-      "google_rating": 4.0,
-      "google_review_count": 36,
+      "google_place_id": "ChIJId6ggH4rM4YRHQ9rczoDMVU",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "S&S Storage Pearcy",
-      "source": "google",
-      "google_place_id": "SS_PEARCY_PLACE_ID",
-      "google_rating": 4.0,
-      "google_review_count": 36,
+      "google_place_id": "ChIJ-6_DGb4sM4YRjhVqCCHIVv0",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "Lake Hamilton Storage",
-      "source": "google",
-      "google_place_id": "LAKE_HAMILTON_PLACE_ID",
-      "google_rating": 4.7,
-      "google_review_count": 16,
+      "google_place_id": "ChIJH-0qEugsM4YRA61c8Z5BHCY",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     },
     {
       "name": "Malvern Ave Storage",
-      "source": "google",
-      "google_place_id": "MALVERN_AVE_PLACE_ID",
-      "google_rating": 4.6,
-      "google_review_count": 16,
+      "google_place_id": "ChIJ3VFUJJzTMoYRxZK77e0xekI",
+      "google_rating": null,
+      "google_review_count": 0,
       "google_reviews": []
     }
   ]
