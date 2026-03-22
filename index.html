@@ -827,7 +827,7 @@
           hashCredentials(u, p).then(function (hash) {
             if (hash === STORED_HASH) {
               saveSession();
-              showDashboard(true); setTimeout(function(){ window.dispatchEvent(new Event('resize')); }, 300);
+              showDashboard(true); setTimeout(function(){ if(window.reinitDashboard) window.reinitDashboard(); }, 300);
             } else {
               if (err) err.textContent = 'Invalid username or password';
             }
@@ -838,7 +838,7 @@
       }
 
       if (isSessionValid()) {
-        showDashboard(true); setTimeout(function(){ window.dispatchEvent(new Event('resize')); }, 300);
+        showDashboard(true); setTimeout(function(){ if(window.reinitDashboard) window.reinitDashboard(); }, 300);
       } else {
         showDashboard(false);
       }
