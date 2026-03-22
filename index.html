@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mountain Storage — Operations Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-p8Q9G6V+UqH3vCwPpQ8WcN6iYG3PaP8p3v2z8i6pHm0="
+          crossorigin=""></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
+
+  <!-- Base styles and theme -->
+  <style>
+    :root {
+      --font-display: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+      --color-bg: #020617;
+      --color-bg-elevated: #050b16;
+      --color-surface: #050816;
+      --color-surface-soft: #050b1c;
+      --color-border-subtle: rgba(148, 163, 184, 0.35);
+      --color-border-strong: rgba(148, 163, 184, 0.6);
+      --color-text: #e5f4ff;
+      --color-text-soft: #9ca3af;
+      --color-text-muted: #6b7280;
+      --color-text-faint: #4b5563;
+      --color-accent: #00d4d8;
+      --color-accent-soft: rgba(0, 212, 216, 0.2);
+      --color-accent-strong: #22c55e;
+      --color-danger: #f87171;
+      --color-warning: #facc15;
+
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-pill: 999px;
+
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: radial-gradient(circle at top, #04101f 0, #020617 40%, #000 100%);
+      color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 88px 24px 40px;
+      display: flex;
+      gap: 24px;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 24px;
+    }
+
+    .layout-main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .layout-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 84px;
+      height: fit-content;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      inset-inline: 0;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(22px);
+      background: radial-gradient(circle at top, rgba(15,23,42,0.72) 0, rgba(2,6,23,0.96) 50%, rgba(2,6,23,0.98) 100%);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 24px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-wrap {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 1.2rem;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.25), transparent 55%),
+        linear-gradient(145deg, #020617, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow:
+        0 0 16px rgba(8, 47, 73, 0.6),
+        0 18px 40px rgba(15, 23, 42, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-inner {
+      inset: 5px;
+      position: absolute;
+      border-radius: 0.9rem;
+      background: radial-gradient(circle at 30% 0, #0f172a 0, #020617 65%);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.8);
+    }
+
+    .logo-svg {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--color-text-soft);
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(22, 163, 74, 0.4);
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.25), rgba(15,23,42,0.9));
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #bbf7d0 0, #22c55e 45%, #166534 100%);
+      box-shadow:
+        0 0 10px #22c55e,
+        0 0 18px rgba(34, 197, 94, 0.65);
+    }
+
+    .header-date {
+      color: var(--color-text-muted);
+    }
+
+    .header-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: radial-gradient(circle at 0 0, rgba(59,130,246,0.3), rgba(15,23,42,0.95));
+    }
+
+    /* Logout btn */
+    #btn-logout {
+      margin-left: 12px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: transparent;
+      color: var(--color-text-soft);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    #btn-logout:hover {
+      border-color: var(--color-accent);
+      color: var(--color-text);
+    }
+
+    /* Section cards */
+    .card {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9) 0, #020617 55%, #000 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background:
+        radial-gradient(circle at 0 0, rgba(45,212,191,0.5), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(59,130,246,0.45), transparent 55%);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #cbd5f5;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    .pill {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 2px 8px;
+      font-size: 11px;
+      color: var(--color-text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* KPI grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .kpi-card {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(145deg, #020617, #020617);
+      padding: 10px 11px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .kpi-value {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .kpi-meta {
+      font-size: 11px;
+      color: var(--color-text-soft);
+    }
+
+    .kpi-bar {
+      margin-top: 4px;
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: #020617;
+      overflow: hidden;
+    }
+
+    .kpi-bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #22d3ee);
+      width: 0;
+      transition: width 0.6s ease-out;
+    }
+
+    /* Revenue banner */
+    .revenue-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(45, 212, 191, 0.6);
+      background:
+        radial-gradient(circle at 0 0, rgba(45,212,191,0.25), transparent 55%),
+        linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,1));
+      box-shadow:
+        0 0 22px rgba(8, 47, 73, 0.85),
+        0 14px 35px rgba(15, 23, 42, 0.9);
+    }
+
+    .revenue-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .revenue-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a5f3fc;
+    }
+
+    .revenue-amount {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: #e0f2fe;
+      text-shadow: 0 0 14px rgba(34, 211, 238, 0.65);
+    }
+
+    .revenue-breakdown {
+      font-size: 12px;
+      color: var(--color-text-soft);
+    }
+
+    .promo-pill {
+      border-radius: var(--radius-pill);
+      padding: 4px 10px;
+      font-size: 11px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.25), rgba(21,128,61,0.8));
+      color: #ecfdf5;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.7);
+      white-space: nowrap;
+    }
+
+    /* Charts */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .chart-wrap {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(145deg, #020617, #020617);
+      padding: 10px;
+      min-height: 180px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 160px !important;
+    }
+
+    /* Local competition */
+    #competition-map {
+      width: 100%;
+      height: 260px;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      overflow: hidden;
+    }
+
+    .competition-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .competition-subtitle {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    .competition-instructions {
+      font-size: 11px;
+      color: var(--color-text-soft);
+    }
+
+    .competition-cards {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .competition-card {
+      border-radius: 0.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(135deg, #020617, #020617);
+      padding: 8px 9px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.4fr);
+      gap: 4px 10px;
+      align-items: flex-start;
+    }
+
+    .competition-card.you {
+      border-color: rgba(34, 197, 94, 0.9);
+      box-shadow:
+        0 0 22px rgba(34, 197, 94, 0.5),
+        0 12px 28px rgba(15, 23, 42, 0.9);
+    }
+
+    .competition-card.active {
+      border-color: var(--color-accent);
+      box-shadow:
+        0 0 20px rgba(34, 211, 238, 0.6),
+        0 10px 22px rgba(15, 23, 42, 0.9);
+    }
+
+    .competition-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pill-you {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: var(--radius-pill);
+      padding: 2px 7px;
+      border: 1px solid rgba(34, 197, 94, 0.8);
+      color: #bbf7d0;
+    }
+
+    .competition-line {
+      font-size: 11px;
+      color: var(--color-text-soft);
+    }
+
+    .competition-pricing {
+      font-size: 11px;
+      color: var(--color-text-soft);
+    }
+
+    .competition-promos {
+      font-size: 11px;
+      color: #facc15;
+    }
+
+    .price-scale {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .price-scale-bar {
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e 0%, #22c55e 25%, #22d3ee 50%, #f97316 100%);
+    }
+
+    .price-scale-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--color-text-soft);
+    }
+
+    /* Reviews */
+    .tab-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      border: none;
+      background: transparent;
+      color: var(--color-text-soft);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.35), rgba(34,211,238,0.25));
+      color: #ecfeff;
+      box-shadow: 0 0 14px rgba(45, 212, 191, 0.6);
+    }
+
+    .reviews-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .review-card {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(145deg, #020617, #020617);
+      padding: 9px 10px;
+      font-size: 12px;
+      color: var(--color-text-soft);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    .review-name {
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .review-stars {
+      color: #fde047;
+      font-size: 11px;
+    }
+
+    /* Alerts */
+    .alert {
+      border-radius: 0.8rem;
+      padding: 7px 9px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: linear-gradient(135deg, #020617, #020617);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .alert.success {
+      border-color: rgba(34, 197, 94, 0.8);
+    }
+    .alert.info {
+      border-color: rgba(56, 189, 248, 0.8);
+    }
+    .alert.warning {
+      border-color: rgba(250, 204, 21, 0.8);
+    }
+
+    .alert-title {
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .alert-body {
+      color: var(--color-text-soft);
+    }
+
+    /* Sidebar nav */
+    .section-nav {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 55%), rgba(10, 15, 30, 0.96);
+      padding: 10px 10px 8px;
+    }
+
+    .section-nav-title {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 8px;
+    }
+
+    .section-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .section-nav-link {
+      border-radius: 999px;
+      padding: 4px 7px;
+      cursor: pointer;
+      color: var(--color-text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .section-nav-link span {
+      pointer-events: none;
+    }
+
+    .section-nav-link.active {
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.35), rgba(34,211,238,0.3));
+      color: #f9fafb;
+      box-shadow: 0 0 16px rgba(45, 212, 191, 0.7);
+    }
+
+    /* Weather */
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .weather-item {
+      color: var(--color-text-soft);
+    }
+
+    .weather-forecast {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--color-text-soft);
+    }
+
+    /* Login overlay */
+    #login-overlay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #04101f 0, #050816 45%, #03040a 100%);
+      padding: 20px;
+    }
+
+    #login-form input {
+      border: 1px solid #1e293b;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        padding-inline: 16px;
+      }
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .layout-sidebar {
+        position: static;
+      }
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .chart-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .reviews-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .competition-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      header .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+
+  <!-- Auth logic: SHA-256("admin:mountain2026") -->
+  <script>
+  'use strict';
+  (function () {
+    var STORED_HASH = 'a02e2d12b829de29d78e41f5846c108cb4a7f9202a3b89c24d6d875638de4daf';
+    var SESSION_KEY = 'ms_dashboard_session';
+
+    function bufferToHex(buffer) {
+      return Array.from(new Uint8Array(buffer))
+        .map(function (b) { return b.toString(16).padStart(2, '0'); })
+        .join('');
+    }
+
+    function hashCredentials(username, password) {
+      var enc = new TextEncoder();
+      var data = enc.encode(username + ':' + password);
+      return window.crypto.subtle.digest('SHA-256', data).then(bufferToHex);
+    }
+
+    function saveSession() {
+      var token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      var expiresAt = Date.now() + 24 * 60 * 60 * 1000;
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({ token: token, expiresAt: expiresAt }));
+      } catch (e) {}
+    }
+
+    function clearSession() {
+      try {
+        localStorage.removeItem(SESSION_KEY);
+      } catch (e) {}
+    }
+
+    function isSessionValid() {
+      try {
+        var raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return false;
+        var obj = JSON.parse(raw);
+        return obj && obj.expiresAt && obj.expiresAt > Date.now();
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function showDashboard(show) {
+      var app = document.getElementById('app-shell');
+      var login = document.getElementById('login-overlay');
+      if (!app || !login) return;
+      if (show) {
+        app.style.display = '';
+        login.style.display = 'none';
+      } else {
+        app.style.display = 'none';
+        login.style.display = 'flex';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          clearSession();
+          showDashboard(false);
+        });
+      }
+
+      var form = document.getElementById('login-form');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var uEl = document.getElementById('login-username');
+          var pEl = document.getElementById('login-password');
+          var err = document.getElementById('login-error');
+          var u = uEl ? uEl.value.trim() : '';
+          var p = pEl ? pEl.value : '';
+          if (err) err.textContent = '';
+
+          hashCredentials(u, p).then(function (hash) {
+            if (hash === STORED_HASH) {
+              saveSession();
+              showDashboard(true);
+            } else {
+              if (err) err.textContent = 'Invalid username or password';
+            }
+          }).catch(function () {
+            if (err) err.textContent = 'Unexpected error. Try again.';
+          });
+        });
+      }
+
+      if (isSessionValid()) {
+        showDashboard(true);
+      } else {
+        showDashboard(false);
+      }
+    });
+  })();
+  </script>
+</head>
+
+<body>
+  <!-- Login overlay -->
+  <div id="login-overlay">
+    <div style="width:360px;padding:32px 28px;background:#050b16;border-radius:18px;border:1px solid rgba(0,212,216,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.85);display:flex;flex-direction:column;gap:20px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <svg class="logo-svg" width="40" height="40" viewBox="0 0 44 44" fill="none" aria-label="Mountain Storage Logo" xmlns="http://www.w3.org/2000/svg">
+          <rect width="44" height="44" rx="10" fill="url(#logo-bg-login)"/>
+          <polygon points="22,8 36,34 8,34" fill="none" stroke="#00d4d8" stroke-width="2.2" stroke-linejoin="round"/>
+          <polygon points="14,34 22,20 30,34" fill="rgba(0,212,216,0.25)" stroke="#00d4d8" stroke-width="1.5" stroke-linejoin="round"/>
+          <circle cx="22" cy="34" r="2.5" fill="#22c55e"/>
+          <line x1="8" y1="34" x2="36" y2="34" stroke="#1e304d" stroke-width="1.5"/>
+          <defs>
+            <linearGradient id="logo-bg-login" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0d1525"/>
+              <stop offset="100%" stop-color="#111c30"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <div style="font-family:'Space Grotesk',system-ui;font-size:18px;font-weight:600;color:#e5f4ff;">Mountain Storage</div>
+          <div style="font-size:12px;color:#6a87b0;margin-top:2px;">Operations Dashboard Login</div>
+        </div>
+      </div>
+
+      <form id="login-form" style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="login-username" style="font-size:12px;color:#8ea6c8;">Username</label>
+          <input id="login-username" type="text" autocomplete="username"
+                 placeholder="admin"
+                 style="padding:8px 10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e5f4ff;font-size:13px;outline:none;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="login-password" style="font-size:12px;color:#8ea6c8;">Password</label>
+          <input id="login-password" type="password" autocomplete="current-password"
+                 placeholder="mountain2026"
+                 style="padding:8px 10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e5f4ff;font-size:13px;outline:none;">
+        </div>
+        <div id="login-error" style="min-height:16px;font-size:11px;color:#f97373;"></div>
+        <button type="submit"
+                style="margin-top:4px;padding:9px 0;border-radius:999px;border:none;background:linear-gradient(135deg,#00d4d8,#22c55e);color:#020617;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 18px rgba(0,212,216,0.5);">
+          Sign In
+        </button>
+        <div style="font-size:11px;color:#64748b;margin-top:4px;">
+          Hint: <span style="color:#e5f4ff;">admin</span> / <span style="color:#e5f4ff;">mountain2026</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- App shell: full dashboard -->
+  <div id="app-shell" style="display:none;">
+    <header>
+      <div class="header-inner">
+        <div class="header-left">
+          <div class="logo-wrap">
+            <div class="logo-inner"></div>
+            <svg class="logo-svg" width="26" height="26" viewBox="0 0 44 44" fill="none" aria-label="Mountain Storage Logo" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="40" height="40" rx="11" fill="url(#logo-bg)"/>
+              <polygon points="22,9 35,33 9,33" fill="none" stroke="#00d4d8" stroke-width="2.1" stroke-linejoin="round"/>
+              <polygon points="15,33 22,19.5 29,33" fill="rgba(0,212,216,0.25)" stroke="#00d4d8" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="22" cy="33" r="2.4" fill="#22c55e"/>
+              <line x1="9" y1="33" x2="35" y2="33" stroke="#1e293b" stroke-width="1.5"/>
+              <defs>
+                <linearGradient id="logo-bg" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#020617"/>
+                  <stop offset="40%" stop-color="#020617"/>
+                  <stop offset="100%" stop-color="#020617"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title">Mountain Storage</div>
+            <div class="brand-subtitle">Operations Dashboard — Hot Springs, AR</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="header-badge">
+            <div class="status-dot"></div>
+            <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Live Site</span>
+          </div>
+          <span class="header-date">March 21, 2026</span>
+          <span class="header-location">
+            <i data-lucide="map-pin" style="width:13px;height:13px;"></i>
+            Hot Springs, AR
+          </span>
+          <button id="btn-logout">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <!-- Main column -->
+        <div class="layout-main">
+          <!-- Revenue + KPIs -->
+          <section id="section-overview" class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">March Performance</div>
+                <div class="card-subtitle">Mountain Storage · Operations Snapshot</div>
+              </div>
+            </div>
+
+            <div class="revenue-banner">
+              <div class="revenue-main">
+                <div class="revenue-label">Month-To-Date Revenue</div>
+                <div id="mtd-total" class="revenue-amount">$3,715</div>
+                <div id="mtd-breakdown" class="revenue-breakdown">
+                  Storage $2,887 · U-Haul $828 · Potential Rent $5,765
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+                <div class="promo-pill">
+                  50% Off First 3 Months · Active
+                </div>
+                <div style="font-size:11px;color:#a5f3fc;">
+                  Promo driving early awareness · monitor move-ins weekly.
+                </div>
+              </div>
+            </div>
+
+            <div class="kpi-grid">
+              <div class="kpi-card">
+                <div class="kpi-label">Occupancy</div>
+                <div id="kpi-occupancy" class="kpi-value">25.9%</div>
+                <div class="kpi-meta">Target 70% by Oct</div>
+                <div class="kpi-bar"><div id="kpi-occupancy-bar" class="kpi-bar-fill" style="width:25.9%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Units</div>
+                <div id="kpi-units" class="kpi-value">45 / 174</div>
+                <div class="kpi-meta">Vacant 129</div>
+                <div class="kpi-bar"><div id="kpi-units-bar" class="kpi-bar-fill" style="width:25.9%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Move-Ins</div>
+                <div id="kpi-moveins" class="kpi-value">2</div>
+                <div class="kpi-meta">March MTD</div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:12%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Move-Outs</div>
+                <div id="kpi-moveouts" class="kpi-value">0</div>
+                <div class="kpi-meta">March MTD</div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:4%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Storage Revenue</div>
+                <div id="kpi-storage-rev" class="kpi-value">$2,887</div>
+                <div class="kpi-meta">Month-to-date</div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:52%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">U-Haul Revenue</div>
+                <div id="kpi-uhaul-rev" class="kpi-value">$828</div>
+                <div class="kpi-meta">Month-to-date</div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Delinquent</div>
+                <div id="kpi-delinquent" class="kpi-value">$0</div>
+                <div class="kpi-meta">Current</div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:5%;"></div></div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Monthly Rent</div>
+                <div id="kpi-rent" class="kpi-value">$5,765</div>
+                <div class="kpi-meta">Potential</div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:50%;"></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Charts section -->
+          <section id="section-charts" class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Occupancy & Activity</div>
+                <div class="card-subtitle">Trends, move activity, U-Haul mix</div>
+              </div>
+            </div>
+            <div class="chart-grid">
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Occupancy Trend</div>
+                <canvas id="chart-occupancy"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Move-Ins vs Move-Outs</div>
+                <canvas id="chart-moves"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">U-Haul by Equipment</div>
+                <canvas id="chart-uhaul"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Weekly Turnovers</div>
+                <canvas id="chart-turnovers"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Weekly Revenue</div>
+                <canvas id="chart-weekly-revenue"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Occupancy by Unit Type</div>
+                <canvas id="chart-unit-types"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Local competition -->
+          <section id="section-competition" class="card">
+            <div class="competition-header">
+              <div>
+                <div class="card-title">Local Competition</div>
+                <div class="competition-subtitle">Hot Springs Market</div>
+              </div>
+              <div class="competition-instructions">Tap a pin or card for details</div>
+            </div>
+
+            <div id="competition-map"></div>
+
+            <div class="price-scale">
+              <div class="price-scale-bar"></div>
+              <div class="price-scale-labels">
+                <span>Cheaper</span>
+                <span>Pricier · Prices as of Mar 2026</span>
+              </div>
+            </div>
+
+            <div id="competition-cards" class="competition-cards"></div>
+          </section>
+
+          <!-- Pricing comparison charts -->
+          <section id="section-pricing" class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Pricing Comparison</div>
+                <div class="card-subtitle">Non-Climate & Climate-Controlled</div>
+              </div>
+            </div>
+            <div class="chart-grid">
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Non-Climate Monthly Rates</div>
+                <canvas id="chart-pricing-nc"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Climate-Controlled Pricing</div>
+                <canvas id="chart-pricing-cc"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Reviews & Google comparison -->
+          <section id="section-reviews" class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Customer Reviews</div>
+                <div class="card-subtitle">Google & U-Haul Dealer Feedback</div>
+              </div>
+              <div class="tab-row">
+                <button class="tab-btn active" data-review-filter="all">All</button>
+                <button class="tab-btn" data-review-filter="google">Google</button>
+                <button class="tab-btn" data-review-filter="uha ul">U-Haul</button>
+                <button class="tab-btn" data-review-filter="5">★ 5 Only</button>
+              </div>
+            </div>
+
+            <div style="font-size:12px;color:var(--color-text-soft);margin-bottom:6px;" id="google-summary">
+              Your rating 5.0 (26 reviews) · Market avg 4.5 · Avg 62 reviews per facility
+            </div>
+
+            <div class="chart-grid">
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Google Reviews Comparison</div>
+                <canvas id="chart-google-reviews"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Weekly Office Hours</div>
+                <canvas id="chart-office-hours"></canvas>
+              </div>
+            </div>
+
+            <div id="reviews-list" class="reviews-grid" style="margin-top:10px;"></div>
+          </section>
+
+          <!-- Weather + alerts -->
+          <section id="section-weather" class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Weather & Rental Impact</div>
+                <div class="card-subtitle">Hot Springs, AR — 7 day outlook</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:10px;">
+              <div style="min-width:120px;">
+                <div id="weather-temp" style="font-family:var(--font-display);font-size:26px;font-weight:600;">64°F · Partly Cloudy</div>
+                <div id="weather-meta" style="font-size:12px;color:var(--color-text-soft);margin-top:3px;">
+                  Feels like 64° · High 68° / Low 51°
+                </div>
+              </div>
+              <div class="weather-grid" id="weather-grid"></div>
+            </div>
+
+            <div id="weather-forecast" class="weather-forecast"></div>
+
+            <div style="margin-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;" id="alert-grid"></div>
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="layout-sidebar">
+          <nav class="section-nav">
+            <div class="section-nav-title">Sections</div>
+            <div class="section-nav-list" id="section-nav-list">
+              <button class="section-nav-link active" data-target="section-overview">
+                <span>Overview</span>
+                <span>01</span>
+              </button>
+              <button class="section-nav-link" data-target="section-charts">
+                <span>Charts & Trends</span>
+                <span>02</span>
+              </button>
+              <button class="section-nav-link" data-target="section-competition">
+                <span>Local Competition</span>
+                <span>03</span>
+              </button>
+              <button class="section-nav-link" data-target="section-pricing">
+                <span>Pricing</span>
+                <span>04</span>
+              </button>
+              <button class="section-nav-link" data-target="section-reviews">
+                <span>Reviews</span>
+                <span>05</span>
+              </button>
+              <button class="section-nav-link" data-target="section-weather">
+                <span>Weather & Alerts</span>
+                <span>06</span>
+              </button>
+            </div>
+          </nav>
+
+          <section class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Competitive Edge</div>
+                <div class="card-subtitle">Why Mountain Storage wins</div>
+              </div>
+            </div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--color-text-soft);">
+              <li>• 24/7 gate access vs limited hours at most competitors</li>
+              <li>• Sunday office hours for weekend move-ins</li>
+              <li>• On-site U-Haul dealer for one-stop moves</li>
+              <li>• 5.0 Google rating with growing review count</li>
+              <li>• Newer facility, modern security & lighting</li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- Data loader and dashboard logic -->
+  <script src="assets/js/data-loader.js"></script>
+</body>
+</html>
