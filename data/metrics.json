@@ -13,7 +13,7 @@
     "move_ins_month": 2,
     "move_outs_month": 0,
     "storage_revenue_mtd": 2887,
-    "uha ul_revenue_mtd": 828,
+        "uhaul_revenue_mtd": 828,
     "delinquent_balance": 0,
     "monthly_rent_potential": 5765,
     "mtd_total_revenue": 3715
@@ -36,25 +36,25 @@
     {
       "week_of": "2026-02-24",
       "storage": 950,
-      "uha ul": 210,
+            "uhaul": 210,
       "other": 0
     },
     {
       "week_of": "2026-03-02",
       "storage": 910,
-      "uha ul": 220,
+            "uhaul": 220,
       "other": 0
     },
     {
       "week_of": "2026-03-09",
       "storage": 870,
-      "uha ul": 190,
+            "uhaul": 190,
       "other": 0
     },
     {
       "week_of": "2026-03-16",
       "storage": 157,
-      "uha ul": 208,
+            "uhaul": 208,
       "other": 0
     }
   ],
@@ -64,7 +64,7 @@
     { "week_of": "2026-03-09", "units_turned": 2 },
     { "week_of": "2026-03-16", "units_turned": 1 }
   ],
-  "uha ul_equipment_mix": [
+      "uhaul_equipment_mix": [
     { "type": "Trucks", "count": 11, "revenue_mtd": 568 },
     { "type": "Trailers", "count": 6, "revenue_mtd": 180 },
     { "type": "Auto Transports", "count": 2, "revenue_mtd": 80 }
@@ -169,7 +169,7 @@
       "status": "new"
     }
   ],
-  "uha ul_breakdown": {
+  "uhaul_breakdown": {
     "truck_turnovers": [
       { "week_of": "2026-02-24", "pickups": 9, "returns": 8 },
       { "week_of": "2026-03-02", "pickups": 11, "returns": 10 },
@@ -223,7 +223,7 @@
       "message": "Historically strongest move-in period for Hot Springs market — watch 10x10 and 10x15 demand."
     },
     {
-      "id": "uha ul-opportunity",
+      "id": "uhaul-opportunity",
       "severity": "warning",
       "title": "U-Haul fleet underutilized Tue–Wed",
       "message": "Consider midweek special or local business outreach to drive truck rentals."
