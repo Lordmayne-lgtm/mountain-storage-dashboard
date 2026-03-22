@@ -69,7 +69,7 @@
     if ($('mtd-breakdown')) {
       $('mtd-breakdown').textContent =
         'Storage ' + formatCurrency(k.storage_revenue_mtd) +
-        ' · U-Haul ' + formatCurrency(k.uha ul_revenue_mtd || k.uhaul_revenue_mtd || 828) +
+        ' · U-Haul ' + formatCurrency(k.uhaul_revenue_mtd || k.uhaul_revenue_mtd || 828) +
         ' · Potential Rent ' + formatCurrency(k.monthly_rent_potential);
     }
 
@@ -83,7 +83,7 @@
     if ($('kpi-moveouts')) $('kpi-moveouts').textContent = k.move_outs_month || 0;
 
     if ($('kpi-storage-rev')) $('kpi-storage-rev').textContent = formatCurrency(k.storage_revenue_mtd);
-    if ($('kpi-uhaul-rev')) $('kpi-uhaul-rev').textContent = formatCurrency(k.uha ul_revenue_mtd || k.uhaul_revenue_mtd || 828);
+    if ($('kpi-uhaul-rev')) $('kpi-uhaul-rev').textContent = formatCurrency(k.uhaul_revenue_mtd || k.uhaul_revenue_mtd || 828);
     if ($('kpi-delinquent')) $('kpi-delinquent').textContent = formatCurrency(k.delinquent_balance || 0);
     if ($('kpi-rent')) $('kpi-rent').textContent = formatCurrency(k.monthly_rent_potential || 5765);
   }
@@ -152,7 +152,7 @@
       }
     });
 
-    var eq = metrics.uha ul_equipment_mix || metrics.uhaul_equipment_mix || [];
+    var eq = metrics.uhaul_equipment_mix || metrics.uhaul_equipment_mix || [];
     buildChart('chart-uhaul', {
       type: 'doughnut',
       data: {
@@ -202,7 +202,7 @@
           },
           {
             label: 'U-Haul',
-            data: weekly.map(function (p) { return p.uha ul || p.uhaul; }),
+            data: weekly.map(function (p) { return p.uhaul || p.uhaul; }),
             backgroundColor: 'rgba(34,211,238,0.9)'
           }
         ]
@@ -480,7 +480,7 @@
       reviewsData.facilities.forEach(function (facility) {
         var list = [];
         if (filter === 'google') list = facility.google_reviews || [];
-        else if (filter === 'uha ul' && facility.uhaul_reviews) list = facility.uhaul_reviews;
+        else if (filter === 'uhaul' && facility.uhaul_reviews) list = facility.uhaul_reviews;
         else list = (facility.google_reviews || []).concat(facility.uhaul_reviews || []);
 
         list.forEach(function (rev) {
