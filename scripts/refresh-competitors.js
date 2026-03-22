@@ -1,41 +1,52 @@
 /* scripts/refresh-competitors.js
  *
- * Refresh competitor pricing and meta data.
- * For now this uses static logic and placeholders; you can later
- * plug in a real scraping or listing API using SCRAPER_API_KEY.
+ * Refresh competitor data by merging latest Google review ratings
+ * from data/reviews.json into data/competitors.json.
+ * Pricing, hours, features etc. remain manually maintained.
+ * Runs via GitHub Actions on a weekly schedule.
  */
 
 const fs = require("fs");
 const path = require("path");
 
-const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY || null;
+function main() {
+  const competitorsPath = path.join(__dirname, "..", "data", "competitors.json");
+  const reviewsPath = path.join(__dirname, "..", "data", "reviews.json");
 
-async function fetchCompetitorData() {
-  // Placeholder implementation: in a real script you would call
-  // SpareFoot / Google / competitor sites via a scraping API.
-  // Keeping the structure aligned with data/competitors.json.
-  const rawPath = path.join(__dirname, "..", "data", "competitors.json");
-  if (!fs.existsSync(rawPath)) {
+  if (!fs.existsSync(competitorsPath)) {
     throw new Error("data/competitors.json not found; seed the file first.");
   }
 
-  const existing = JSON.parse(fs.readFileSync(rawPath, "utf8"));
+  const competitors = JSON.parse(fs.readFileSync(competitorsPath, "utf8"));
 
-  // Example: simply bump last_updated timestamp.
-  return {
-    ...existing,
-    last_updated: new Date().toISOString()
-  };
+  // If reviews.json exists, merge rating data
+  if (fs.existsSync(reviewsPath)) {
+    const reviews = JSON.parse(fs.readFileSync(reviewsPath, "utf8"));
+    const reviewMap = {};
+    for (const f of reviews.facilities || []) {
+      reviewMap[f.name] = f;
+    }
+
+    let updated = 0;
+    for (const facility of competitors.facilities || []) {
+      const match = reviewMap[facility.name];
+      if (match) {
+        if (match.google_rating !== null && match.google_rating !== undefined) {
+          facility.google_rating = match.google_rating;
+          facility.google_review_count = match.google_review_count || 0;
+          updated++;
+          console.log(`Updated ${facility.name}: ${match.google_rating} stars (${match.google_review_count} reviews)`);
+        }
+      }
+    }
+    console.log(`Merged ratings for ${updated} facilities from reviews.json`);
+  } else {
+    console.log("No reviews.json found; skipping rating merge.");
+  }
+
+  competitors.last_updated = new Date().toISOString();
+  fs.writeFileSync(competitorsPath, JSON.stringify(competitors, null, 2), "utf8");
+  console.log(`Wrote ${competitorsPath}`);
 }
 
-async function main() {
-  const data = await fetchCompetitorData();
-  const targetPath = path.join(__dirname, "..", "data", "competitors.json");
-  fs.writeFileSync(targetPath, JSON.stringify(data, null, 2), "utf8");
-  console.log(`Wrote ${targetPath}`);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main();
