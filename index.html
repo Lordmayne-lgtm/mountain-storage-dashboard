@@ -5,10 +5,10 @@
   <title>Mountain Storage — Operations Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Fonts -->
+  <!-- Fonts: Geist (display) + Inter (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -23,822 +23,764 @@
   <!-- Lucide icons -->
   <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
 
-  <!-- Base styles and theme -->
   <style>
+    /* ─── Design Tokens ──────────────────────────────────────────────────────────────────────── */
     :root {
-      --font-display: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-display: "Geist", "Inter", system-ui, sans-serif;
+      --font-body:    "Inter", system-ui, sans-serif;
 
-      --color-bg: #020617;
-      --color-bg-elevated: #050b16;
-      --color-surface: #050816;
-      --color-surface-soft: #050b1c;
-      --color-border-subtle: rgba(148, 163, 184, 0.35);
-      --color-border-strong: rgba(148, 163, 184, 0.6);
-      --color-text: #e5f4ff;
-      --color-text-soft: #9ca3af;
-      --color-text-muted: #6b7280;
-      --color-text-faint: #4b5563;
-      --color-accent: #00d4d8;
-      --color-accent-soft: rgba(0, 212, 216, 0.2);
-      --color-accent-strong: #22c55e;
-      --color-danger: #f87171;
-      --color-warning: #facc15;
+      /* Type scale */
+      --text-xs:   0.6875rem;  /* 11px */
+      --text-sm:   0.75rem;    /* 12px */
+      --text-base: 0.875rem;   /* 14px */
+      --text-lg:   1rem;       /* 16px */
+      --text-xl:   1.125rem;   /* 18px */
+      --text-2xl:  1.375rem;   /* 22px */
 
-      --radius-md: 0.75rem;
-      --radius-lg: 1rem;
-      --radius-pill: 999px;
+      /* 4px spacing */
+      --sp-1:  0.25rem;
+      --sp-2:  0.5rem;
+      --sp-3:  0.75rem;
+      --sp-4:  1rem;
+      --sp-5:  1.25rem;
+      --sp-6:  1.5rem;
+      --sp-8:  2rem;
+      --sp-10: 2.5rem;
+      --sp-12: 3rem;
 
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
+      /* Radius */
+      --r-sm:   0.375rem;
+      --r-md:   0.5rem;
+      --r-lg:   0.75rem;
+      --r-xl:   1rem;
+      --r-2xl:  1.25rem;
+      --r-full: 9999px;
+
+      /* Transitions */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur: 160ms;
+      --dur-slow: 280ms;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Dark palette */
+    :root, [data-theme="dark"] {
+      --bg:            #09101e;
+      --bg-raised:     #0d1525;
+      --surface:       #111d30;
+      --surface-2:     #162237;
+      --surface-3:     #1c293f;
+      --border:        rgba(148, 163, 184, 0.10);
+      --border-strong: rgba(148, 163, 184, 0.18);
+      --border-accent: rgba(0, 210, 220, 0.28);
 
-    html, body {
-      height: 100%;
-      scroll-behavior: smooth;
+      --text:          #dde7f5;
+      --text-muted:    #7a8fa8;
+      --text-faint:    #3d5068;
+
+      /* Accent: cyan-teal */
+      --accent:        #00d0db;
+      --accent-dim:    rgba(0, 208, 219, 0.10);
+
+      /* Success: green */
+      --green:         #22c55e;
+
+      /* Status */
+      --yellow:        #f59e0b;
+      --red:           #f87171;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.20);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.25);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.55), 0 4px 8px rgba(0,0,0,0.30);
     }
 
+    /* ─── Reset ─────────────────────────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 68px; }
     body {
       font-family: var(--font-body);
-      background: radial-gradient(circle at top, #04101f 0, #020617 40%, #000 100%);
-      color: var(--color-text);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100dvh;
     }
-
     a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+    img, svg { display: block; }
+    input, select, textarea { font: inherit; color: inherit; }
 
-    main {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 88px 24px 40px;
-      display: flex;
-      gap: 24px;
-    }
-
-    /* Layout */
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 260px;
-      gap: 24px;
-    }
-
-    .layout-main {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .layout-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      position: sticky;
-      top: 84px;
-      height: fit-content;
-    }
-
-    /* Header */
+    /* ─── Header ─────────────────────────────────────────────────────────────────────────── */
     header {
       position: fixed;
-      inset-inline: 0;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(22px);
-      background: radial-gradient(circle at top, rgba(15,23,42,0.72) 0, rgba(2,6,23,0.96) 50%, rgba(2,6,23,0.98) 100%);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+      inset: 0 0 auto 0;
+      z-index: 100;
+      height: 56px;
+      background: rgba(9, 16, 30, 0.88);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border-bottom: 1px solid var(--border);
     }
 
     .header-inner {
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
-      padding: 14px 24px 10px;
+      height: 100%;
+      padding: 0 var(--sp-6);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: var(--sp-4);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: var(--sp-3);
     }
 
-    .logo-wrap {
-      position: relative;
-      width: 44px;
-      height: 44px;
-      border-radius: 1.2rem;
-      background:
-        radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(34,197,94,0.25), transparent 55%),
-        linear-gradient(145deg, #020617, #020617);
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      box-shadow:
-        0 0 16px rgba(8, 47, 73, 0.6),
-        0 18px 40px rgba(15, 23, 42, 0.9);
+    .logo-mark {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r-lg);
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
 
-    .logo-inner {
-      inset: 5px;
-      position: absolute;
-      border-radius: 0.9rem;
-      background: radial-gradient(circle at 30% 0, #0f172a 0, #020617 65%);
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.8);
-    }
-
-    .logo-svg {
-      position: relative;
-      z-index: 1;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-
-    .brand-title {
+    .brand-name {
       font-family: var(--font-display);
+      font-size: var(--text-lg);
       font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-size: 13px;
+      letter-spacing: -0.015em;
+      color: var(--text);
     }
-
-    .brand-subtitle {
-      font-size: 11px;
-      color: var(--color-text-muted);
+    .brand-sub {
+      font-size: var(--text-xs);
+      color: var(--text-faint);
+      margin-top: 1px;
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-size: 12px;
-      color: var(--color-text-soft);
+      gap: var(--sp-3);
     }
 
-    .header-badge {
+    .badge-live {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 4px 10px 4px 6px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(22, 163, 74, 0.4);
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.25), rgba(15,23,42,0.9));
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
+      gap: 5px;
+      padding: 3px 8px 3px 6px;
+      border-radius: var(--r-full);
+      border: 1px solid rgba(34, 197, 94, 0.30);
+      background: rgba(34, 197, 94, 0.07);
+      font-size: var(--text-xs);
+      color: #86efac;
+      font-weight: 500;
+      letter-spacing: 0.04em;
     }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #bbf7d0 0, #22c55e 45%, #166534 100%);
-      box-shadow:
-        0 0 10px #22c55e,
-        0 0 18px rgba(34, 197, 94, 0.65);
+    .live-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.8); }
     }
 
     .header-date {
-      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      color: var(--text-faint);
     }
 
-    .header-location {
+    .badge-location {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: radial-gradient(circle at 0 0, rgba(59,130,246,0.3), rgba(15,23,42,0.95));
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: var(--r-full);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
     }
 
-    /* Logout btn */
     #btn-logout {
-      margin-left: 12px;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 3px 10px;
+      border-radius: var(--r-full);
+      border: 1px solid var(--border);
       background: transparent;
-      color: var(--color-text-soft);
-      font-size: 11px;
-      letter-spacing: 0.08em;
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      cursor: pointer;
+      transition:
+        border-color var(--dur) var(--ease-out),
+        color var(--dur) var(--ease-out);
     }
-
     #btn-logout:hover {
-      border-color: var(--color-accent);
-      color: var(--color-text);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
-    /* Section cards */
+    /* ─── Layout ────────────────────────────────────────────────────────────────────────────── */
+    main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 76px var(--sp-6) var(--sp-10);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 236px;
+      gap: var(--sp-5);
+      align-items: start;
+    }
+
+    .layout-main {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+
+    .layout-sidebar {
+      position: sticky;
+      top: 72px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    /* ─── Card ─────────────────────────────────────────────────────────────────────────────────── */
     .card {
-      background: radial-gradient(circle at top left, rgba(15,23,42,0.9) 0, #020617 55%, #000 100%);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      box-shadow: var(--shadow-soft);
-      padding: 16px 18px;
-      position: relative;
-      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-2xl);
+      padding: var(--sp-5);
+      box-shadow: var(--shadow-sm);
+      transition:
+        border-color var(--dur) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out);
     }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      padding: 1px;
-      background:
-        radial-gradient(circle at 0 0, rgba(45,212,191,0.5), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(59,130,246,0.45), transparent 55%);
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0.6;
-      pointer-events: none;
+    .card:hover {
+      border-color: var(--border-strong);
     }
 
     .card-header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-4);
     }
 
     .card-title {
       font-family: var(--font-display);
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #cbd5f5;
+      font-size: var(--text-base);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
     }
 
     .card-subtitle {
-      font-size: 12px;
-      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      color: var(--text-faint);
+      margin-top: 2px;
     }
 
-    .pill {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      padding: 2px 8px;
-      font-size: 11px;
-      color: var(--color-text-soft);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* KPI grid */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .kpi-card {
-      border-radius: 0.9rem;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: linear-gradient(145deg, #020617, #020617);
-      padding: 10px 11px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .kpi-label {
-      font-size: 11px;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .kpi-value {
-      font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .kpi-meta {
-      font-size: 11px;
-      color: var(--color-text-soft);
-    }
-
-    .kpi-bar {
-      margin-top: 4px;
-      width: 100%;
-      height: 4px;
-      border-radius: 999px;
-      background: #020617;
-      overflow: hidden;
-    }
-
-    .kpi-bar-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #22c55e, #22d3ee);
-      width: 0;
-      transition: width 0.6s ease-out;
-    }
-
-    /* Revenue banner */
+    /* ─── Revenue Banner ────────────────────────────────────────────────────────────── */
     .revenue-banner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 10px 12px;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(45, 212, 191, 0.6);
-      background:
-        radial-gradient(circle at 0 0, rgba(45,212,191,0.25), transparent 55%),
-        linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,1));
-      box-shadow:
-        0 0 22px rgba(8, 47, 73, 0.85),
-        0 14px 35px rgba(15, 23, 42, 0.9);
-    }
-
-    .revenue-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      gap: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+      border-radius: var(--r-xl);
+      background: linear-gradient(135deg, rgba(0,208,219,0.06), rgba(0,0,0,0) 60%), var(--surface-2);
+      border: 1px solid var(--border-accent);
+      margin-bottom: var(--sp-4);
     }
 
     .revenue-label {
-      font-size: 11px;
-      letter-spacing: 0.12em;
+      font-size: var(--text-xs);
+      font-weight: 500;
       text-transform: uppercase;
-      color: #a5f3fc;
+      letter-spacing: 0.09em;
+      color: var(--accent);
     }
-
     .revenue-amount {
       font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 600;
-      color: #e0f2fe;
-      text-shadow: 0 0 14px rgba(34, 211, 238, 0.65);
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
     }
-
     .revenue-breakdown {
-      font-size: 12px;
-      color: var(--color-text-soft);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-top: 3px;
     }
 
     .promo-pill {
-      border-radius: var(--radius-pill);
-      padding: 4px 10px;
-      font-size: 11px;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      border: 1px solid rgba(34, 197, 94, 0.7);
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.25), rgba(21,128,61,0.8));
-      color: #ecfdf5;
-      box-shadow: 0 0 16px rgba(34, 197, 94, 0.7);
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: var(--r-full);
+      border: 1px solid rgba(34,197,94,0.35);
+      background: rgba(34,197,94,0.07);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: #86efac;
+      letter-spacing: 0.04em;
       white-space: nowrap;
     }
+    .promo-note {
+      font-size: var(--text-xs);
+      color: rgba(0,208,219,0.60);
+      margin-top: 4px;
+      text-align: right;
+    }
 
-    /* Charts */
+    /* ─── KPI Grid ───────────────────────────────────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-3);
+    }
+
+    .kpi-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-4) var(--sp-4) var(--sp-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-1);
+      transition:
+        border-color var(--dur) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out);
+    }
+    .kpi-card:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 1px rgba(0,208,219,0.06);
+    }
+
+    .kpi-label {
+      font-size: var(--text-xs);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-faint);
+    }
+    .kpi-value {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi-meta {
+      font-size: var(--text-xs);
+      color: var(--text-faint);
+    }
+
+    .kpi-bar {
+      margin-top: var(--sp-2);
+      height: 3px;
+      border-radius: var(--r-full);
+      background: var(--border);
+      overflow: hidden;
+    }
+    .kpi-bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--accent));
+      width: 0;
+      transition: width 0.7s var(--ease-out);
+    }
+
+    /* ─── Charts ────────────────────────────────────────────────────────────────────────────────── */
     .chart-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 8px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
     }
 
-    .chart-wrap { position: relative;
-      border-radius: 0.9rem;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: linear-gradient(145deg, #020617, #020617);
-      padding: 10px;
-      min-height: 180px;
+    .chart-wrap {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-4);
+      min-height: 188px;
     }
-
+    .chart-label {
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: var(--sp-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
     canvas {
       width: 100% !important;
-      height: 160px !important;
+      height: 152px !important;
     }
 
-    /* Local competition */
+    /* ─── Competition ─────────────────────────────────────────────────────────────── */
     #competition-map {
       width: 100%;
       height: 260px;
-      border-radius: 0.9rem;
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      border-radius: var(--r-xl);
+      border: 1px solid var(--border);
       overflow: hidden;
+      margin-bottom: var(--sp-4);
     }
 
-    .competition-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .competition-subtitle {
-      font-size: 12px;
-      color: var(--color-text-muted);
-    }
-
-    .competition-instructions {
-      font-size: 11px;
-      color: var(--color-text-soft);
-    }
-
-    .competition-cards {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .competition-cards { display: flex; flex-direction: column; gap: var(--sp-2); }
 
     .competition-card {
-      border-radius: 0.8rem;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: linear-gradient(135deg, #020617, #020617);
-      padding: 8px 9px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-3) var(--sp-4);
       cursor: pointer;
       display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.4fr);
-      gap: 4px 10px;
-      align-items: flex-start;
+      grid-template-columns: 1.6fr 1.4fr;
+      gap: 3px var(--sp-4);
+      transition:
+        border-color var(--dur) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out);
     }
-
+    .competition-card:hover { border-color: var(--border-strong); }
     .competition-card.you {
-      border-color: rgba(34, 197, 94, 0.9);
-      box-shadow:
-        0 0 22px rgba(34, 197, 94, 0.5),
-        0 12px 28px rgba(15, 23, 42, 0.9);
+      border-color: rgba(34,197,94,0.45);
+      background: linear-gradient(135deg, rgba(34,197,94,0.04), var(--bg-raised));
     }
-
     .competition-card.active {
-      border-color: var(--color-accent);
-      box-shadow:
-        0 0 20px rgba(34, 211, 238, 0.6),
-        0 10px 22px rgba(15, 23, 42, 0.9);
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 1px rgba(0,208,219,0.07);
     }
 
     .competition-name-row {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
+      gap: var(--sp-2);
+      font-size: var(--text-base);
       font-weight: 600;
     }
-
     .pill-you {
       font-size: 10px;
-      letter-spacing: 0.08em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      border-radius: var(--radius-pill);
+      border-radius: var(--r-full);
       padding: 2px 7px;
-      border: 1px solid rgba(34, 197, 94, 0.8);
-      color: #bbf7d0;
+      border: 1px solid rgba(34,197,94,0.45);
+      color: #86efac;
+      background: rgba(34,197,94,0.07);
     }
-
-    .competition-line {
-      font-size: 11px;
-      color: var(--color-text-soft);
-    }
-
-    .competition-pricing {
-      font-size: 11px;
-      color: var(--color-text-soft);
-    }
-
-    .competition-promos {
-      font-size: 11px;
-      color: #facc15;
-    }
+    .competition-line { font-size: var(--text-xs); color: var(--text-muted); }
+    .competition-pricing { font-size: var(--text-xs); color: var(--text-muted); }
+    .competition-promos  { font-size: var(--text-xs); color: var(--yellow); margin-top: 2px; }
 
     .price-scale {
-      margin-top: 10px;
+      margin-bottom: var(--sp-3);
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: var(--sp-1);
     }
-
     .price-scale-bar {
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #22c55e 0%, #22c55e 25%, #22d3ee 50%, #f97316 100%);
+      height: 4px;
+      border-radius: var(--r-full);
+      background: linear-gradient(90deg, var(--green) 0%, var(--accent) 40%, #f97316 100%);
     }
-
     .price-scale-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 10px;
-      color: var(--color-text-soft);
+      font-size: var(--text-xs);
+      color: var(--text-faint);
     }
 
-    /* Reviews */
+    /* ─── Reviews ────────────────────────────────────────────────────────────────────────────── */
     .tab-row {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 2px;
       padding: 2px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
-      background: rgba(15, 23, 42, 0.85);
+      border-radius: var(--r-full);
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
     }
-
     .tab-btn {
-      border-radius: 999px;
-      padding: 3px 9px;
-      font-size: 11px;
-      border: none;
-      background: transparent;
-      color: var(--color-text-soft);
-      cursor: pointer;
+      border-radius: var(--r-full);
+      padding: 4px 10px;
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--text-faint);
+      transition:
+        background var(--dur) var(--ease-out),
+        color var(--dur) var(--ease-out);
     }
-
     .tab-btn.active {
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.35), rgba(34,211,238,0.25));
-      color: #ecfeff;
-      box-shadow: 0 0 14px rgba(45, 212, 191, 0.6);
+      background: var(--surface-3);
+      color: var(--text);
     }
+    .tab-btn:hover:not(.active) { color: var(--text-muted); }
 
     .reviews-grid {
-      margin-top: 10px;
+      margin-top: var(--sp-4);
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
     }
-
     .review-card {
-      border-radius: 0.9rem;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: linear-gradient(145deg, #020617, #020617);
-      padding: 9px 10px;
-      font-size: 12px;
-      color: var(--color-text-soft);
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: var(--sp-4);
+      font-size: var(--text-xs);
+      color: var(--text-muted);
     }
-
     .review-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
-      font-size: 11px;
+      margin-bottom: var(--sp-1);
     }
+    .review-name { font-size: var(--text-base); font-weight: 600; color: var(--text); }
+    .review-stars { color: var(--yellow); letter-spacing: 1px; }
 
-    .review-name {
-      font-weight: 500;
-      color: var(--color-text);
-    }
-
-    .review-stars {
-      color: #fde047;
-      font-size: 11px;
-    }
-
-    /* Alerts */
+    /* ─── Alerts ───────────────────────────────────────────────────────────────────────────────── */
     .alert {
-      border-radius: 0.8rem;
-      padding: 7px 9px;
-      font-size: 11px;
-      border: 1px solid rgba(148, 163, 184, 0.55);
-      background: linear-gradient(135deg, #020617, #020617);
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: var(--sp-3) var(--sp-4);
+      font-size: var(--text-xs);
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
+    .alert.success { border-color: rgba(34,197,94,0.30); background: rgba(34,197,94,0.03); }
+    .alert.info    { border-color: rgba(56,189,248,0.30); background: rgba(56,189,248,0.03); }
+    .alert.warning { border-color: rgba(245,158,11,0.30); background: rgba(245,158,11,0.03); }
+    .alert-title   { font-weight: 600; color: var(--text); }
+    .alert-body    { color: var(--text-muted); }
 
-    .alert.success {
-      border-color: rgba(34, 197, 94, 0.8);
+    /* ─── Weather ────────────────────────────────────────────────────────────────────────────── */
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-3);
+      font-size: var(--text-xs);
     }
-    .alert.info {
-      border-color: rgba(56, 189, 248, 0.8);
-    }
-    .alert.warning {
-      border-color: rgba(250, 204, 21, 0.8);
-    }
-
-    .alert-title {
-      font-weight: 500;
-      color: var(--color-text);
-    }
-
-    .alert-body {
-      color: var(--color-text-soft);
-    }
-
-    /* Sidebar nav */
-    .section-nav {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.55);
-      background: radial-gradient(circle at 0 0, rgba(56,189,248,0.18), transparent 55%), rgba(10, 15, 30, 0.96);
-      padding: 10px 10px 8px;
-    }
-
-    .section-nav-title {
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-bottom: 8px;
-    }
-
-    .section-nav-list {
+    .weather-item { color: var(--text-muted); }
+    .weather-item > div:first-child { color: var(--text-faint); font-size: var(--text-xs); }
+    .weather-forecast {
+      margin-top: var(--sp-4);
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 12px;
+      justify-content: space-between;
+      font-size: var(--text-xs);
+      color: var(--text-muted);
     }
+    .weather-forecast > div { display: flex; flex-direction: column; gap: 2px; }
 
+    /* ─── Sidebar nav ──────────────────────────────────────────────────────────────── */
+    .section-nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-2xl);
+      padding: var(--sp-4);
+    }
+    .section-nav-title {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--text-faint);
+      margin-bottom: var(--sp-3);
+    }
+    .section-nav-list { display: flex; flex-direction: column; gap: 2px; }
     .section-nav-link {
-      border-radius: 999px;
-      padding: 4px 7px;
-      cursor: pointer;
-      color: var(--color-text-soft);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: var(--sp-2);
+      padding: 6px 8px;
+      border-radius: var(--r-lg);
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      transition:
+        background var(--dur) var(--ease-out),
+        color var(--dur) var(--ease-out);
     }
-
-    .section-nav-link span {
-      pointer-events: none;
-    }
-
+    .section-nav-link:hover { background: var(--surface-2); color: var(--text); }
     .section-nav-link.active {
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.35), rgba(34,211,238,0.3));
-      color: #f9fafb;
-      box-shadow: 0 0 16px rgba(45, 212, 191, 0.7);
+      background: var(--accent-dim);
+      color: var(--accent);
     }
-
-    /* Weather */
-    .weather-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 6px;
-      font-size: 11px;
+    .section-nav-link .nav-num {
+      font-size: 10px;
+      color: var(--text-faint);
+      font-variant-numeric: tabular-nums;
     }
+    .section-nav-link.active .nav-num { color: rgba(0,208,219,0.45); }
 
-    .weather-item {
-      color: var(--color-text-soft);
-    }
-
-    .weather-forecast {
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--color-text-soft);
-    }
-
-    /* Login overlay */
+    /* ─── Login overlay ───────────────────────────────────────────────────────────────── */
     #login-overlay {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #04101f 0, #050816 45%, #03040a 100%);
-      padding: 20px;
+      min-height: 100dvh;
+      background: var(--bg);
+      padding: var(--sp-5);
     }
 
-    #login-form input {
-      border: 1px solid #1e293b;
+    .login-card {
+      width: 380px;
+      padding: var(--sp-8);
+      background: var(--surface);
+      border-radius: var(--r-2xl);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
     }
-
-    @media (max-width: 960px) {
-      main {
-        padding-inline: 16px;
-      }
-      .layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .layout-sidebar {
-        position: static;
-      }
-      .kpi-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .chart-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .reviews-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .competition-card {
-        grid-template-columns: minmax(0, 1fr);
-      }
+    .login-header { display: flex; align-items: center; gap: var(--sp-4); }
+    .login-title  { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; }
+    .login-subtitle { font-size: var(--text-xs); color: var(--text-faint); margin-top: 2px; }
+    .login-form { display: flex; flex-direction: column; gap: var(--sp-4); }
+    .form-group { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .form-label { font-size: var(--text-xs); font-weight: 500; color: var(--text-muted); }
+    .form-input {
+      padding: 9px 12px;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-raised);
+      color: var(--text);
+      font-size: var(--text-base);
+      font-family: var(--font-body);
+      outline: none;
+      transition:
+        border-color var(--dur) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out);
     }
-
-    @media (max-width: 640px) {
-      header .header-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
+    .form-input::placeholder { color: var(--text-faint); }
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
     }
-  /* Section nav dark fix */     .section-nav {       background: radial-gradient(circle at 0 0, rgba(0,212,216,0.08), transparent 55%), rgba(2,6,23,0.98) !important;       border-color: rgba(0,212,216,0.25) !important;     }     .section-nav-title {       color: #22d3ee !important;     }     .section-nav-link {       color: #6b7280 !important;       background: transparent !important;     }     .section-nav-link:hover {       color: #9ca3af !important;       background: rgba(0,212,216,0.06) !important;     }     .section-nav-link.active {       background: radial-gradient(circle at 0 0, rgba(0,212,216,0.2), rgba(34,197,94,0.15)) !important;       color: #ecfeff !important;       box-shadow: 0 0 14px rgba(0,212,216,0.4) !important;     }     /* Card improvements */     .card {       background: radial-gradient(circle at top left, rgba(2,12,30,0.95) 0, rgba(2,6,23,0.98) 55%, rgba(0,0,0,0.95) 100%) !important;       border-color: rgba(0,212,216,0.2) !important;     }     .card::before {       background: radial-gradient(circle at 0 0, rgba(0,212,216,0.4), transparent 55%), radial-gradient(circle at 100% 100%, rgba(34,197,94,0.3), transparent 55%) !important;     }     /* KPI cards richer */     .kpi-card {       background: linear-gradient(145deg, rgba(2,12,30,0.95), rgba(2,6,23,0.98)) !important;       border-color: rgba(0,212,216,0.18) !important;     }     /* Chart wraps */     .chart-wrap {       background: linear-gradient(145deg, rgba(2,12,30,0.95), rgba(2,6,23,0.98)) !important;       border-color: rgba(0,212,216,0.18) !important;     }     /* Competition cards */     .competition-card {       background: linear-gradient(135deg, rgba(2,12,30,0.95), rgba(2,6,23,0.98)) !important;       border-color: rgba(0,212,216,0.18) !important;     }     .competition-card.you {       border-color: rgba(34,197,94,0.7) !important;       box-shadow: 0 0 18px rgba(34,197,94,0.35), 0 8px 24px rgba(15,23,42,0.9) !important;     }     .competition-card.active {       border-color: rgba(0,212,216,0.6) !important;       box-shadow: 0 0 16px rgba(0,212,216,0.35), 0 8px 20px rgba(15,23,42,0.9) !important;     }     /* Review cards */     .review-card {       background: linear-gradient(145deg, rgba(2,12,30,0.95), rgba(2,6,23,0.98)) !important;       border-color: rgba(0,212,216,0.18) !important;     }     /* Tab row dark */     .tab-row {       background: rgba(2,6,23,0.95) !important;       border-color: rgba(0,212,216,0.25) !important;     }     .tab-btn {       color: #6b7280 !important;     }     .tab-btn.active {       background: radial-gradient(circle at 0 0, rgba(0,212,216,0.25), rgba(34,197,94,0.15)) !important;       color: #ecfeff !important;       box-shadow: 0 0 10px rgba(0,212,216,0.4) !important;     }     /* Revenue banner richer */     .revenue-banner {       border-color: rgba(0,212,216,0.5) !important;       background: radial-gradient(circle at 0 0, rgba(0,212,216,0.15), transparent 55%), linear-gradient(135deg, rgba(2,12,30,0.98), rgba(2,6,23,1)) !important;     }     /* Alerts darker */     .alert {       background: linear-gradient(135deg, rgba(2,12,30,0.95), rgba(2,6,23,0.98)) !important;     }     /* Header richer */     header {       background: radial-gradient(circle at top, rgba(2,12,30,0.85) 0, rgba(2,6,23,0.98) 50%, rgba(2,6,23,0.99) 100%) !important;       border-bottom-color: rgba(0,212,216,0.15) !important;     }     /* Map dot pulse animation */     .map-dot-you > div:first-child {       animation: pulse-glow 2s ease-in-out infinite;     }     @keyframes pulse-glow {       0%, 100% { box-shadow: 0 0 12px #22c55e, 0 0 24px rgba(34,197,94,0.5); }       50% { box-shadow: 0 0 20px #22c55e, 0 0 40px rgba(34,197,94,0.7); }     }     </style>
+    .login-error { min-height: 16px; font-size: var(--text-xs); color: var(--red); }
+    .btn-login {
+      padding: 10px;
+      border-radius: var(--r-full);
+      background: linear-gradient(135deg, var(--accent), var(--green));
+      color: #09101e;
+      font-size: var(--text-base);
+      font-weight: 600;
+      font-family: var(--font-display);
+      letter-spacing: 0.02em;
+      transition:
+        opacity var(--dur) var(--ease-out),
+        transform var(--dur) var(--ease-out);
+    }
+    .btn-login:hover { opacity: 0.90; transform: translateY(-1px); }
+    .login-hint { font-size: var(--text-xs); color: var(--text-faint); }
+    .login-hint span { color: var(--text-muted); }
 
-  <!-- Auth logic: SHA-256("admin:mountain2026") -->
+    /* ─── Responsive ──────────────────────────────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .layout { grid-template-columns: 1fr; }
+      .layout-sidebar { position: static; }
+    }
+    @media (max-width: 768px) {
+      main { padding-inline: var(--sp-4); }
+      .header-inner { padding: 0 var(--sp-4); }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .competition-card { grid-template-columns: 1fr; }
+      .revenue-banner { flex-direction: column; align-items: flex-start; }
+      .header-date, .badge-location { display: none; }
+    }
+  </style>
+
+  <!-- Auth: SHA-256("admin:mountain2026") -->
   <script>
   'use strict';
   (function () {
     var STORED_HASH = 'a02e2d12b829de29d78e41f5846c108cb4a7f9202a3b89c24d6d875638de4daf';
     var SESSION_KEY = 'ms_dashboard_session';
 
-    function bufferToHex(buffer) {
-      return Array.from(new Uint8Array(buffer))
-        .map(function (b) { return b.toString(16).padStart(2, '0'); })
-        .join('');
+    function bufferToHex(b) {
+      return Array.from(new Uint8Array(b)).map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
     }
-
-    function hashCredentials(username, password) {
-      var enc = new TextEncoder();
-      var data = enc.encode(username + ':' + password);
-      return window.crypto.subtle.digest('SHA-256', data).then(bufferToHex);
+    function hashCredentials(u, p) {
+      return window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(u + ':' + p)).then(bufferToHex);
     }
-
     function saveSession() {
-      var token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-      var expiresAt = Date.now() + 24 * 60 * 60 * 1000;
       try {
-        localStorage.setItem(SESSION_KEY, JSON.stringify({ token: token, expiresAt: expiresAt }));
-      } catch (e) {}
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: Math.random().toString(36).slice(2),
+          expiresAt: Date.now() + 86400000
+        }));
+      } catch(e) {}
     }
-
-    function clearSession() {
-      try {
-        localStorage.removeItem(SESSION_KEY);
-      } catch (e) {}
-    }
-
+    function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch(e) {} }
     function isSessionValid() {
       try {
-        var raw = localStorage.getItem(SESSION_KEY);
-        if (!raw) return false;
-        var obj = JSON.parse(raw);
-        return obj && obj.expiresAt && obj.expiresAt > Date.now();
-      } catch (e) {
-        return false;
-      }
+        var s = JSON.parse(localStorage.getItem(SESSION_KEY));
+        return s && s.expiresAt > Date.now();
+      } catch(e) { return false; }
     }
-
     function showDashboard(show) {
       var app = document.getElementById('app-shell');
       var login = document.getElementById('login-overlay');
       if (!app || !login) return;
-      if (show) {
-        app.style.display = '';
-        login.style.display = 'none';
-      } else {
-        app.style.display = 'none';
-        login.style.display = 'flex';
-      }
+      app.style.display = show ? '' : 'none';
+      login.style.display = show ? 'none' : 'flex';
     }
 
     document.addEventListener('DOMContentLoaded', function () {
       var logoutBtn = document.getElementById('btn-logout');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function () {
-          clearSession();
-          showDashboard(false);
-        });
-      }
+      if (logoutBtn) logoutBtn.addEventListener('click', function() { clearSession(); showDashboard(false); });
 
       var form = document.getElementById('login-form');
       if (form) {
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', function(e) {
           e.preventDefault();
-          var uEl = document.getElementById('login-username');
-          var pEl = document.getElementById('login-password');
+          var u = (document.getElementById('login-username') || {}).value || '';
+          var p = (document.getElementById('login-password') || {}).value || '';
           var err = document.getElementById('login-error');
-          var u = uEl ? uEl.value.trim() : '';
-          var p = pEl ? pEl.value : '';
           if (err) err.textContent = '';
-
-          hashCredentials(u, p).then(function (hash) {
+          hashCredentials(u.trim(), p).then(function(hash) {
             if (hash === STORED_HASH) {
               saveSession();
-              showDashboard(true); setTimeout(function(){ if(window.reinitDashboard) window.reinitDashboard(); }, 300);
+              showDashboard(true);
+              setTimeout(function(){ if(window.reinitDashboard) window.reinitDashboard(); }, 300);
             } else {
               if (err) err.textContent = 'Invalid username or password';
             }
-          }).catch(function () {
-            if (err) err.textContent = 'Unexpected error. Try again.';
-          });
+          }).catch(function(){ if (err) err.textContent = 'Unexpected error. Try again.'; });
         });
       }
 
       if (isSessionValid()) {
-        showDashboard(true); setTimeout(function(){ if(window.reinitDashboard) window.reinitDashboard(); }, 300);
+        showDashboard(true);
+        setTimeout(function(){ if(window.reinitDashboard) window.reinitDashboard(); }, 300);
       } else {
         showDashboard(false);
       }
@@ -848,101 +790,79 @@
 </head>
 
 <body>
-  <!-- Login overlay -->
+  <!-- Login Overlay -->
   <div id="login-overlay">
-    <div style="width:360px;padding:32px 28px;background:#050b16;border-radius:18px;border:1px solid rgba(0,212,216,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.85);display:flex;flex-direction:column;gap:20px;">
-      <div style="display:flex;align-items:center;gap:14px;">
-        <svg class="logo-svg" width="40" height="40" viewBox="0 0 44 44" fill="none" aria-label="Mountain Storage Logo" xmlns="http://www.w3.org/2000/svg">
-          <rect width="44" height="44" rx="10" fill="url(#logo-bg-login)"/>
-          <polygon points="22,8 36,34 8,34" fill="none" stroke="#00d4d8" stroke-width="2.2" stroke-linejoin="round"/>
-          <polygon points="14,34 22,20 30,34" fill="rgba(0,212,216,0.25)" stroke="#00d4d8" stroke-width="1.5" stroke-linejoin="round"/>
-          <circle cx="22" cy="34" r="2.5" fill="#22c55e"/>
-          <line x1="8" y1="34" x2="36" y2="34" stroke="#1e304d" stroke-width="1.5"/>
-          <defs>
-            <linearGradient id="logo-bg-login" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#0d1525"/>
-              <stop offset="100%" stop-color="#111c30"/>
-            </linearGradient>
-          </defs>
-        </svg>
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo-mark">
+          <svg width="20" height="20" viewBox="0 0 44 44" fill="none" aria-label="Mountain Storage" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="22,8 37,35 7,35" fill="none" stroke="#00d0db" stroke-width="2.2" stroke-linejoin="round"/>
+            <polygon points="14,35 22,20 30,35" fill="rgba(0,208,219,0.22)" stroke="#00d0db" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="22" cy="35" r="2.5" fill="#22c55e"/>
+          </svg>
+        </div>
         <div>
-          <div style="font-family:'Space Grotesk',system-ui;font-size:18px;font-weight:600;color:#e5f4ff;">Mountain Storage</div>
-          <div style="font-size:12px;color:#6a87b0;margin-top:2px;">Operations Dashboard Login</div>
+          <div class="login-title">Mountain Storage</div>
+          <div class="login-subtitle">Operations Dashboard</div>
         </div>
       </div>
 
-      <form id="login-form" style="display:flex;flex-direction:column;gap:14px;">
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <label for="login-username" style="font-size:12px;color:#8ea6c8;">Username</label>
-          <input id="login-username" type="text" autocomplete="username"
-                 placeholder="admin"
-                 style="padding:8px 10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e5f4ff;font-size:13px;outline:none;">
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="login-username" class="form-label">Username</label>
+          <input id="login-username" class="form-input" type="text" autocomplete="username" placeholder="admin" />
         </div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <label for="login-password" style="font-size:12px;color:#8ea6c8;">Password</label>
-          <input id="login-password" type="password" autocomplete="current-password"
-                 placeholder="mountain2026"
-                 style="padding:8px 10px;border-radius:8px;border:1px solid #1e293b;background:#020617;color:#e5f4ff;font-size:13px;outline:none;">
+        <div class="form-group">
+          <label for="login-password" class="form-label">Password</label>
+          <input id="login-password" class="form-input" type="password" autocomplete="current-password" placeholder="mountain2026" />
         </div>
-        <div id="login-error" style="min-height:16px;font-size:11px;color:#f97373;"></div>
-        <button type="submit"
-                style="margin-top:4px;padding:9px 0;border-radius:999px;border:none;background:linear-gradient(135deg,#00d4d8,#22c55e);color:#020617;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 18px rgba(0,212,216,0.5);">
-          Sign In
-        </button>
-        <div style="font-size:11px;color:#64748b;margin-top:4px;">
-          Hint: <span style="color:#e5f4ff;">admin</span> / <span style="color:#e5f4ff;">mountain2026</span>
-        </div>
+        <div id="login-error" class="login-error"></div>
+        <button type="submit" class="btn-login">Sign In</button>
+        <div class="login-hint">Hint: <span>admin</span> / <span>mountain2026</span></div>
       </form>
     </div>
   </div>
 
-  <!-- App shell: full dashboard -->
+  <!-- App Shell -->
   <div id="app-shell" style="display:none;">
+
     <header>
       <div class="header-inner">
         <div class="header-left">
-          <div class="logo-wrap">
-            <div class="logo-inner"></div>
-            <svg class="logo-svg" width="26" height="26" viewBox="0 0 44 44" fill="none" aria-label="Mountain Storage Logo" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="40" height="40" rx="11" fill="url(#logo-bg)"/>
-              <polygon points="22,9 35,33 9,33" fill="none" stroke="#00d4d8" stroke-width="2.1" stroke-linejoin="round"/>
-              <polygon points="15,33 22,19.5 29,33" fill="rgba(0,212,216,0.25)" stroke="#00d4d8" stroke-width="1.5" stroke-linejoin="round"/>
-              <circle cx="22" cy="33" r="2.4" fill="#22c55e"/>
-              <line x1="9" y1="33" x2="35" y2="33" stroke="#1e293b" stroke-width="1.5"/>
-              <defs>
-                <linearGradient id="logo-bg" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#020617"/>
-                  <stop offset="40%" stop-color="#020617"/>
-                  <stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-              </defs>
+          <div class="logo-mark">
+            <svg width="20" height="20" viewBox="0 0 44 44" fill="none" aria-label="Mountain Storage" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="22,8 37,35 7,35" fill="none" stroke="#00d0db" stroke-width="2.2" stroke-linejoin="round"/>
+              <polygon points="14,35 22,20 30,35" fill="rgba(0,208,219,0.22)" stroke="#00d0db" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="22" cy="35" r="2.5" fill="#22c55e"/>
             </svg>
           </div>
-          <div class="brand-text">
-            <div class="brand-title">Mountain Storage</div>
-            <div class="brand-subtitle">Operations Dashboard — Hot Springs, AR</div>
+          <div>
+            <div class="brand-name">Mountain Storage</div>
+            <div class="brand-sub">Operations Dashboard · Hot Springs, AR</div>
           </div>
         </div>
+
         <div class="header-right">
-          <div class="header-badge">
-            <div class="status-dot"></div>
-            <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Live Site</span>
-          </div>
-          <span class="header-date">March 21, 2026</span>
-          <span class="header-location">
-            <i data-lucide="map-pin" style="width:13px;height:13px;"></i>
+          <span class="badge-live">
+            <span class="live-dot"></span>
+            Live
+          </span>
+          <span class="header-date">March 22, 2026</span>
+          <span class="badge-location">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Hot Springs, AR
           </span>
-          <button id="btn-logout">Logout</button>
+          <button id="btn-logout" type="button">Logout</button>
         </div>
       </div>
     </header>
 
     <main>
       <div class="layout">
-        <!-- Main column -->
+        <!-- Main Column -->
         <div class="layout-main">
-          <!-- Revenue + KPIs -->
+
+          <!-- OVERVIEW -->
           <section id="section-overview" class="card">
             <div class="card-header">
               <div>
@@ -952,7 +872,7 @@
             </div>
 
             <div class="revenue-banner">
-              <div class="revenue-main">
+              <div>
                 <div class="revenue-label">Month-To-Date Revenue</div>
                 <div id="mtd-total" class="revenue-amount">$3,715</div>
                 <div id="mtd-breakdown" class="revenue-breakdown">
@@ -960,12 +880,8 @@
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
-                <div class="promo-pill">
-                  50% Off First 3 Months · Active
-                </div>
-                <div style="font-size:11px;color:#a5f3fc;">
-                  Promo driving early awareness · monitor move-ins weekly.
-                </div>
+                <div class="promo-pill">50% Off First 3 Months · Active</div>
+                <div class="promo-note">Promo driving early awareness · monitor move-ins weekly.</div>
               </div>
             </div>
 
@@ -1010,7 +926,7 @@
                 <div class="kpi-label">Delinquent</div>
                 <div id="kpi-delinquent" class="kpi-value">$0</div>
                 <div class="kpi-meta">Current</div>
-                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:5%;"></div></div>
+                <div class="kpi-bar"><div class="kpi-bar-fill" style="width:5%;background:var(--red);"></div></div>
               </div>
               <div class="kpi-card">
                 <div class="kpi-label">Monthly Rent</div>
@@ -1021,50 +937,50 @@
             </div>
           </section>
 
-          <!-- Charts section -->
+          <!-- CHARTS -->
           <section id="section-charts" class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Occupancy & Activity</div>
+                <div class="card-title">Occupancy &amp; Activity</div>
                 <div class="card-subtitle">Trends, move activity, U-Haul mix</div>
               </div>
             </div>
             <div class="chart-grid">
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Occupancy Trend</div>
+                <div class="chart-label">Occupancy Trend</div>
                 <canvas id="chart-occupancy"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Move-Ins vs Move-Outs</div>
+                <div class="chart-label">Move-Ins vs Move-Outs</div>
                 <canvas id="chart-moves"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">U-Haul by Equipment</div>
+                <div class="chart-label">U-Haul by Equipment</div>
                 <canvas id="chart-uhaul"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Weekly Turnovers</div>
+                <div class="chart-label">Weekly Turnovers</div>
                 <canvas id="chart-turnovers"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Weekly Revenue</div>
+                <div class="chart-label">Weekly Revenue</div>
                 <canvas id="chart-weekly-revenue"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Occupancy by Unit Type</div>
+                <div class="chart-label">Occupancy by Unit Type</div>
                 <canvas id="chart-unit-types"></canvas>
               </div>
             </div>
           </section>
 
-          <!-- Local competition -->
+          <!-- COMPETITION -->
           <section id="section-competition" class="card">
-            <div class="competition-header">
+            <div class="card-header">
               <div>
                 <div class="card-title">Local Competition</div>
-                <div class="competition-subtitle">Hot Springs Market</div>
+                <div class="card-subtitle">Hot Springs Market</div>
               </div>
-              <div class="competition-instructions">Tap a pin or card for details</div>
+              <div style="font-size:var(--text-xs);color:var(--text-faint);">Tap a pin or card for details</div>
             </div>
 
             <div id="competition-map"></div>
@@ -1080,72 +996,72 @@
             <div id="competition-cards" class="competition-cards"></div>
           </section>
 
-          <!-- Pricing comparison charts -->
+          <!-- PRICING -->
           <section id="section-pricing" class="card">
             <div class="card-header">
               <div>
                 <div class="card-title">Pricing Comparison</div>
-                <div class="card-subtitle">Non-Climate & Climate-Controlled</div>
+                <div class="card-subtitle">Non-Climate &amp; Climate-Controlled</div>
               </div>
             </div>
             <div class="chart-grid">
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Non-Climate Monthly Rates</div>
+                <div class="chart-label">Non-Climate Monthly Rates</div>
                 <canvas id="chart-pricing-nc"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Climate-Controlled Pricing</div>
+                <div class="chart-label">Climate-Controlled Pricing</div>
                 <canvas id="chart-pricing-cc"></canvas>
               </div>
             </div>
           </section>
 
-          <!-- Reviews & Google comparison -->
+          <!-- REVIEWS -->
           <section id="section-reviews" class="card">
             <div class="card-header">
               <div>
                 <div class="card-title">Customer Reviews</div>
-                <div class="card-subtitle">Google & U-Haul Dealer Feedback</div>
+                <div class="card-subtitle">Google &amp; U-Haul Dealer Feedback</div>
               </div>
               <div class="tab-row">
                 <button class="tab-btn active" data-review-filter="all">All</button>
                 <button class="tab-btn" data-review-filter="google">Google</button>
                 <button class="tab-btn" data-review-filter="uhaul">U-Haul</button>
-                <button class="tab-btn" data-review-filter="5">★ 5 Only</button>
+                <button class="tab-btn" data-review-filter="5">&#9733; 5</button>
               </div>
             </div>
 
-            <div style="font-size:12px;color:var(--color-text-soft);margin-bottom:6px;" id="google-summary">
+            <div id="google-summary" style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--sp-3);">
               Your rating 5.0 (26 reviews) · Market avg 4.5 · Avg 62 reviews per facility
             </div>
 
             <div class="chart-grid">
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Google Reviews Comparison</div>
+                <div class="chart-label">Google Reviews Comparison</div>
                 <canvas id="chart-google-reviews"></canvas>
               </div>
               <div class="chart-wrap">
-                <div style="font-size:11px;color:var(--color-text-soft);margin-bottom:4px;">Weekly Office Hours</div>
+                <div class="chart-label">Weekly Office Hours</div>
                 <canvas id="chart-office-hours"></canvas>
               </div>
             </div>
 
-            <div id="reviews-list" class="reviews-grid" style="margin-top:10px;"></div>
+            <div id="reviews-list" class="reviews-grid"></div>
           </section>
 
-          <!-- Weather + alerts -->
+          <!-- WEATHER -->
           <section id="section-weather" class="card">
             <div class="card-header">
               <div>
-                <div class="card-title">Weather & Rental Impact</div>
+                <div class="card-title">Weather &amp; Rental Impact</div>
                 <div class="card-subtitle">Hot Springs, AR — 7 day outlook</div>
               </div>
             </div>
 
-            <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:10px;">
-              <div style="min-width:120px;">
-                <div id="weather-temp" style="font-family:var(--font-display);font-size:26px;font-weight:600;">64°F · Partly Cloudy</div>
-                <div id="weather-meta" style="font-size:12px;color:var(--color-text-soft);margin-top:3px;">
+            <div style="display:flex;gap:var(--sp-5);align-items:flex-start;margin-bottom:var(--sp-4);">
+              <div>
+                <div id="weather-temp" style="font-family:var(--font-display);font-size:var(--text-2xl);font-weight:700;letter-spacing:-0.02em;">64°F · Partly Cloudy</div>
+                <div id="weather-meta" style="font-size:var(--text-xs);color:var(--text-muted);margin-top:4px;">
                   Feels like 64° · High 68° / Low 51°
                 </div>
               </div>
@@ -1154,63 +1070,64 @@
 
             <div id="weather-forecast" class="weather-forecast"></div>
 
-            <div style="margin-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;" id="alert-grid"></div>
+            <div style="margin-top:var(--sp-4);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);" id="alert-grid"></div>
           </section>
-        </div>
+
+        </div><!-- /layout-main -->
 
         <!-- Sidebar -->
         <aside class="layout-sidebar">
           <nav class="section-nav">
-            <div class="section-nav-title">Sections</div>
+            <div class="section-nav-title">Navigation</div>
             <div class="section-nav-list" id="section-nav-list">
               <button class="section-nav-link active" data-target="section-overview">
                 <span>Overview</span>
-                <span>01</span>
+                <span class="nav-num">01</span>
               </button>
               <button class="section-nav-link" data-target="section-charts">
-                <span>Charts & Trends</span>
-                <span>02</span>
+                <span>Charts &amp; Trends</span>
+                <span class="nav-num">02</span>
               </button>
               <button class="section-nav-link" data-target="section-competition">
                 <span>Local Competition</span>
-                <span>03</span>
+                <span class="nav-num">03</span>
               </button>
               <button class="section-nav-link" data-target="section-pricing">
                 <span>Pricing</span>
-                <span>04</span>
+                <span class="nav-num">04</span>
               </button>
               <button class="section-nav-link" data-target="section-reviews">
                 <span>Reviews</span>
-                <span>05</span>
+                <span class="nav-num">05</span>
               </button>
               <button class="section-nav-link" data-target="section-weather">
-                <span>Weather & Alerts</span>
-                <span>06</span>
+                <span>Weather &amp; Alerts</span>
+                <span class="nav-num">06</span>
               </button>
             </div>
           </nav>
 
-          <section class="card">
+          <div class="card">
             <div class="card-header">
               <div>
                 <div class="card-title">Competitive Edge</div>
                 <div class="card-subtitle">Why Mountain Storage wins</div>
               </div>
             </div>
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--color-text-soft);">
-              <li>• 24/7 gate access vs limited hours at most competitors</li>
-              <li>• Sunday office hours for weekend move-ins</li>
-              <li>• On-site U-Haul dealer for one-stop moves</li>
-              <li>• 5.0 Google rating with growing review count</li>
-              <li>• Newer facility, modern security & lighting</li>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--sp-2);font-size:var(--text-xs);color:var(--text-muted);">
+              <li>· 24/7 gate access vs limited hours at most competitors</li>
+              <li>· Sunday office hours for weekend move-ins</li>
+              <li>· On-site U-Haul dealer for one-stop moves</li>
+              <li>· 5.0 Google rating with growing review count</li>
+              <li>· Newer facility, modern security &amp; lighting</li>
             </ul>
-          </section>
+          </div>
         </aside>
-      </div>
+      </div><!-- /layout -->
     </main>
-  </div>
+  </div><!-- /app-shell -->
 
-  <!-- Data loader and dashboard logic -->
-  <script>if(window.Chart){Chart.defaults.responsive=true;Chart.defaults.maintainAspectRatio=false;}</script>     <script src="assets/js/data-loader.js"></script>
+  <script>if(window.Chart){Chart.defaults.responsive=true;Chart.defaults.maintainAspectRatio=false;}</script>
+  <script src="assets/js/data-loader.js"></script>
 </body>
 </html>
