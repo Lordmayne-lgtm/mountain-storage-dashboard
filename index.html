@@ -1124,10 +1124,75 @@
           </div>
         </aside>
       </div><!-- /layout -->
+
+          <!-- File Upload Section -->
+    <section id="section-uploads" style="margin-top:var(--sp-6);max-width:1320px;margin-left:auto;margin-right:auto;padding:0 var(--sp-6);">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Data Uploads</div>
+            <div class="card-subtitle">Drop CSV or Excel files to update dashboard data</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4);">
+          <!-- U-Haul Upload -->
+          <div id="drop-uhaul" style="border:2px dashed var(--border-strong);border-radius:var(--r-xl);padding:var(--sp-8) var(--sp-4);text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;background:var(--bg-raised);">
+            <div style="font-size:2rem;margin-bottom:var(--sp-2);">&#x1F69B;</div>
+            <div style="font-family:var(--font-display);font-weight:600;font-size:var(--text-base);color:var(--text);margin-bottom:var(--sp-1);">U-Haul Data</div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--sp-3);">Drag &amp; drop CSV/Excel here or click to browse</div>
+            <input type="file" id="file-uhaul" accept=".csv,.xlsx,.xls" style="display:none;">
+            <button onclick="document.getElementById('file-uhaul').click()" style="padding:6px 16px;border-radius:var(--r-full);border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-muted);font-size:var(--text-xs);cursor:pointer;">Browse Files</button>
+            <div id="uhaul-upload-status" style="margin-top:var(--sp-2);font-size:var(--text-xs);color:var(--green);min-height:16px;"></div>
+          </div>
+          <!-- WebSelfStorage Upload -->
+          <div id="drop-wss" style="border:2px dashed var(--border-strong);border-radius:var(--r-xl);padding:var(--sp-8) var(--sp-4);text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;background:var(--bg-raised);">
+            <div style="font-size:2rem;margin-bottom:var(--sp-2);">&#x1F3E2;</div>
+            <div style="font-family:var(--font-display);font-weight:600;font-size:var(--text-base);color:var(--text);margin-bottom:var(--sp-1);">WebSelfStorage Data</div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--sp-3);">Drag &amp; drop CSV/Excel here or click to browse</div>
+            <input type="file" id="file-wss" accept=".csv,.xlsx,.xls" style="display:none;">
+            <button onclick="document.getElementById('file-wss').click()" style="padding:6px 16px;border-radius:var(--r-full);border:1px solid var(--border-strong);background:var(--surface-2);color:var(--text-muted);font-size:var(--text-xs);cursor:pointer;">Browse Files</button>
+            <div id="wss-upload-status" style="margin-top:var(--sp-2);font-size:var(--text-xs);color:var(--green);min-height:16px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
     </main>
   </div><!-- /app-shell -->
 
   <script>if(window.Chart){Chart.defaults.responsive=true;Chart.defaults.maintainAspectRatio=false;}</script>
   <script src="assets/js/data-loader.js"></script>
+
+    <script>
+  /* Drag-and-drop upload handlers */
+  (function(){
+    function setupDrop(dropId, inputId, statusId, label) {
+      var drop = document.getElementById(dropId);
+      var input = document.getElementById(inputId);
+      var status = document.getElementById(statusId);
+      if (!drop || !input || !status) return;
+      function highlight() { drop.style.borderColor='var(--accent)'; drop.style.background='var(--accent-dim)'; }
+      function unhighlight() { drop.style.borderColor='var(--border-strong)'; drop.style.background='var(--bg-raised)'; }
+      function handleFile(file) {
+        if (!file) return;
+        var ext = file.name.split('.').pop().toLowerCase();
+        if (['csv','xlsx','xls'].indexOf(ext) === -1) {
+          status.style.color = 'var(--red)';
+          status.textContent = 'Invalid file type. Use CSV or Excel.';
+          return;
+        }
+        status.style.color = 'var(--green)';
+        status.textContent = '\u2705 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB) ready';
+      }
+      drop.addEventListener('dragover', function(e){ e.preventDefault(); highlight(); });
+      drop.addEventListener('dragleave', function(e){ e.preventDefault(); unhighlight(); });
+      drop.addEventListener('drop', function(e){ e.preventDefault(); unhighlight(); if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+      input.addEventListener('change', function(){ if(input.files.length) handleFile(input.files[0]); });
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      setupDrop('drop-uhaul','file-uhaul','uhaul-upload-status','U-Haul');
+      setupDrop('drop-wss','file-wss','wss-upload-status','WebSelfStorage');
+    });
+  })();
+  </script>
 </body>
 </html>
