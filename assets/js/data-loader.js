@@ -52,9 +52,9 @@
   function initKpis(metrics) {
     if (!metrics || !metrics.kpis) return;
     var k = metrics.kpis;
-    if ($('mtd-total')) $('mtd-total').textContent = formatCurrency(k.mtd_total_revenue || k.mtd_total || 3715);
+    var computedTotal = (k.storage_revenue_mtd || 0) + (k.uhaul_revenue_mtd || 0);     if ($('mtd-total')) $('mtd-total').textContent = formatCurrency(computedTotal);
     if ($('mtd-breakdown')) {
-      $('mtd-breakdown').textContent = 'Storage ' + formatCurrency(k.storage_revenue_mtd) + ' \u00b7 U-Haul ' + formatCurrency(k.uhaul_revenue_mtd || 828) + ' \u00b7 Potential Rent ' + formatCurrency(k.monthly_rent_potential);
+      $('mtd-breakdown').textContent = 'Storage ' + formatCurrency(k.storage_revenue_mtd) + ' \u00b7 U-Haul ' + formatCurrency(k.uhaul_revenue_mtd || 0) + ' \u00b7 Potential Rent ' + formatCurrency(k.monthly_rent_potential);
     }
     if ($('kpi-occupancy')) $('kpi-occupancy').textContent = (k.occupancy_pct || 0).toFixed(1) + '%';
     if ($('kpi-occupancy-bar')) $('kpi-occupancy-bar').style.width = (k.occupancy_pct || 0) + '%';
@@ -63,9 +63,9 @@
     if ($('kpi-moveins')) $('kpi-moveins').textContent = k.move_ins_month || 0;
     if ($('kpi-moveouts')) $('kpi-moveouts').textContent = k.move_outs_month || 0;
     if ($('kpi-storage-rev')) $('kpi-storage-rev').textContent = formatCurrency(k.storage_revenue_mtd);
-    if ($('kpi-uhaul-rev')) $('kpi-uhaul-rev').textContent = formatCurrency(k.uhaul_revenue_mtd || 828);
+    if ($('kpi-uhaul-rev')) $('kpi-uhaul-rev').textContent = formatCurrency(k.uhaul_revenue_mtd || 0);
     if ($('kpi-delinquent')) $('kpi-delinquent').textContent = formatCurrency(k.delinquent_balance || 0);
-    if ($('kpi-rent')) $('kpi-rent').textContent = formatCurrency(k.monthly_rent_potential || 5765);
+    if ($('kpi-rent')) $('kpi-rent').textContent = formatCurrency(k.monthly_rent_potential || 0);
   }
 
   function buildChart(id, config) {
