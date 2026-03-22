@@ -114,7 +114,7 @@
     /* Use static map image with CSS dot overlays */
     var facilities = competitors.facilities;
     /* Map bounds: lat 34.38-34.58, lng -93.15 to -92.95 */
-    var minLat = 34.38, maxLat = 34.58, minLng = -93.15, maxLng = -92.95;
+    var minLat = 34.40, maxLat = 34.52, minLng = -93.10, maxLng = -93.01;
     var staticUrl = 'https://maps.geoapify.com/v1/staticmap?style=dark-matter-dark-grey&width=800&height=400&center=lonlat:-93.05,34.50&zoom=11&apiKey=demo';
     mapEl.innerHTML = '';
     mapEl.style.position = 'relative';
