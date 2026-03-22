@@ -15,8 +15,7 @@
     "storage_revenue_mtd": 2887,
         "uhaul_revenue_mtd": 828,
     "delinquent_balance": 0,
-    "monthly_rent_potential": 5765,
-    "mtd_total_revenue": 3715
+    "monthly_rent_potential": 5765
   },
   "occupancy_trend": [
     { "date": "2026-03-01", "occupancy_pct": 22.0 },
