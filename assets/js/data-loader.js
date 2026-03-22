@@ -1,6 +1,6 @@
 /* assets/js/data-loader.js
  *
- * Fetch JSON data and initialize KPIs, charts, Leaflet map,
+ * Fetch JSON data and initialize KPIs, charts, static map with dots,
  * competition cards, reviews, and weather.
  */
 (function () {
@@ -78,109 +78,93 @@
   function initCharts(metrics, competitors, reviews) {
     if (!metrics) return;
     var occ = metrics.occupancy_trend || [];
-    buildChart('chart-occupancy', {
-      type: 'line',
-      data: { labels: occ.map(function (p) { return p.date.slice(5); }), datasets: [{ label: 'Occupancy %', data: occ.map(function (p) { return p.occupancy_pct; }), borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.25)', tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: '#22d3ee' }] },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 }, callback: function (v) { return v + '%'; } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-    });
-
+    buildChart('chart-occupancy', { type:'line', data:{ labels:occ.map(function(p){return p.date.slice(5);}), datasets:[{label:'Occupancy %',data:occ.map(function(p){return p.occupancy_pct;}),borderColor:'#22d3ee',backgroundColor:'rgba(34,211,238,0.25)',tension:0.35,fill:true,pointRadius:3,pointBackgroundColor:'#22d3ee'}]}, options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10},callback:function(v){return v+'%';}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
     var moves = metrics.move_activity_weekly || [];
-    buildChart('chart-moves', {
-      type: 'bar',
-      data: { labels: moves.map(function (p) { return p.week_of.slice(5); }), datasets: [{ label: 'Move-Ins', data: moves.map(function (p) { return p.move_ins; }), backgroundColor: 'rgba(34,197,94,0.9)' }, { label: 'Move-Outs', data: moves.map(function (p) { return p.move_outs; }), backgroundColor: 'rgba(248,113,113,0.9)' }] },
-      options: { responsive: true, plugins: { legend: { display: true, labels: { color: '#9ca3af', font: { size: 10 } } } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-    });
-
+    buildChart('chart-moves', { type:'bar', data:{ labels:moves.map(function(p){return p.week_of.slice(5);}), datasets:[{label:'Move-Ins',data:moves.map(function(p){return p.move_ins;}),backgroundColor:'rgba(34,197,94,0.9)'},{label:'Move-Outs',data:moves.map(function(p){return p.move_outs;}),backgroundColor:'rgba(248,113,113,0.9)'}]}, options:{responsive:true,plugins:{legend:{display:true,labels:{color:'#9ca3af',font:{size:10}}}},scales:{x:{ticks:{color:'#64748b',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
     var eq = metrics.uhaul_equipment_mix || [];
-    buildChart('chart-uhaul', {
-      type: 'doughnut',
-      data: { labels: eq.map(function (p) { return p.type; }), datasets: [{ data: eq.map(function (p) { return p.revenue_mtd || p.count; }), backgroundColor: ['#22c55e', '#22d3ee', '#facc15', '#a855f7'] }] },
-      options: { responsive: true, plugins: { legend: { display: true, labels: { color: '#9ca3af', font: { size: 10 } } } }, cutout: '60%' }
-    });
-
+    buildChart('chart-uhaul', { type:'doughnut', data:{ labels:eq.map(function(p){return p.type;}), datasets:[{data:eq.map(function(p){return p.revenue_mtd||p.count;}),backgroundColor:['#22c55e','#22d3ee','#facc15','#a855f7']}]}, options:{responsive:true,plugins:{legend:{display:true,labels:{color:'#9ca3af',font:{size:10}}}},cutout:'60%'} });
     var turnovers = metrics.weekly_turnovers || [];
-    buildChart('chart-turnovers', {
-      type: 'bar',
-      data: { labels: turnovers.map(function (p) { return p.week_of.slice(5); }), datasets: [{ label: 'Units Turned', data: turnovers.map(function (p) { return p.units_turned; }), backgroundColor: 'rgba(56,189,248,0.9)' }] },
-      options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-    });
-
+    buildChart('chart-turnovers', { type:'bar', data:{ labels:turnovers.map(function(p){return p.week_of.slice(5);}), datasets:[{label:'Units Turned',data:turnovers.map(function(p){return p.units_turned;}),backgroundColor:'rgba(56,189,248,0.9)'}]}, options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
     var weekly = metrics.weekly_revenue || [];
-    buildChart('chart-weekly-revenue', {
-      type: 'bar',
-      data: { labels: weekly.map(function (p) { return p.week_of.slice(5); }), datasets: [{ label: 'Storage', data: weekly.map(function (p) { return p.storage; }), backgroundColor: 'rgba(34,197,94,0.9)' }, { label: 'U-Haul', data: weekly.map(function (p) { return p.uhaul; }), backgroundColor: 'rgba(34,211,238,0.9)' }] },
-      options: { responsive: true, plugins: { legend: { display: true, labels: { color: '#9ca3af', font: { size: 10 } } } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-    });
-
+    buildChart('chart-weekly-revenue', { type:'bar', data:{ labels:weekly.map(function(p){return p.week_of.slice(5);}), datasets:[{label:'Storage',data:weekly.map(function(p){return p.storage;}),backgroundColor:'rgba(34,197,94,0.9)'},{label:'U-Haul',data:weekly.map(function(p){return p.uhaul;}),backgroundColor:'rgba(34,211,238,0.9)'}]}, options:{responsive:true,plugins:{legend:{display:true,labels:{color:'#9ca3af',font:{size:10}}}},scales:{x:{ticks:{color:'#64748b',font:{size:10}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
     var types = metrics.occupancy_by_unit_type || [];
-    buildChart('chart-unit-types', {
-      type: 'bar',
-      data: { labels: types.map(function (t) { return t.type + (t.climate ? ' (CC)' : ''); }), datasets: [{ label: 'Occupancy %', data: types.map(function (t) { if (!t.total) return 0; return Math.round((t.occupied / t.total) * 100); }), backgroundColor: 'rgba(34,197,94,0.9)' }] },
-      options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 10 }, callback: function (v) { return v + '%'; } }, grid: { color: 'rgba(15,23,42,0.7)' } }, y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { display: false } } } }
-    });
-
+    buildChart('chart-unit-types', { type:'bar', data:{ labels:types.map(function(t){return t.type+(t.climate?' (CC)':'');}), datasets:[{label:'Occupancy %',data:types.map(function(t){if(!t.total)return 0;return Math.round((t.occupied/t.total)*100);}),backgroundColor:'rgba(34,197,94,0.9)'}]}, options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:10},callback:function(v){return v+'%';}},grid:{color:'rgba(15,23,42,0.7)'}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{display:false}}}} });
     if (competitors && competitors.comparisons) {
       var nc = competitors.comparisons.non_climate_10x10 || {};
-      var ncFacilities = nc.facilities || [];
-      buildChart('chart-pricing-nc', {
-        type: 'bar',
-        data: { labels: ncFacilities.map(function (f) { return f.name; }), datasets: [{ label: '10x10 NC', data: ncFacilities.map(function (f) { return f.price || 0; }), backgroundColor: ncFacilities.map(function (f) { return f.name === 'Mountain Storage' ? 'rgba(34,197,94,0.95)' : 'rgba(34,211,238,0.8)'; }) }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 }, callback: function (v) { return '$' + v; } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-      });
+      var ncF = nc.facilities || [];
+      buildChart('chart-pricing-nc', { type:'bar', data:{ labels:ncF.map(function(f){return f.name;}), datasets:[{label:'10x10 NC',data:ncF.map(function(f){return f.price||0;}),backgroundColor:ncF.map(function(f){return f.name==='Mountain Storage'?'rgba(34,197,94,0.95)':'rgba(34,211,238,0.8)';})}]}, options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10},callback:function(v){return '$'+v;}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
       var cc = competitors.comparisons.climate_pricing || {};
-      var ccExamples = cc.examples || [];
-      buildChart('chart-pricing-cc', {
-        type: 'bar',
-        data: { labels: ccExamples.map(function (e) { return e.name + ' ' + e.size; }), datasets: [{ label: 'Climate', data: ccExamples.map(function (e) { return e.price || 0; }), backgroundColor: ccExamples.map(function (e) { return e.name === 'Mountain Storage' ? 'rgba(34,197,94,0.95)' : 'rgba(56,189,248,0.85)'; }) }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 }, callback: function (v) { return '$' + v; } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-      });
+      var ccEx = cc.examples || [];
+      buildChart('chart-pricing-cc', { type:'bar', data:{ labels:ccEx.map(function(e){return e.name+' '+e.size;}), datasets:[{label:'Climate',data:ccEx.map(function(e){return e.price||0;}),backgroundColor:ccEx.map(function(e){return e.name==='Mountain Storage'?'rgba(34,197,94,0.95)':'rgba(56,189,248,0.85)';})}]}, options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10},callback:function(v){return '$'+v;}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
     }
-
     if (reviews && reviews.facilities) {
-      var facilities = reviews.facilities;
-      buildChart('chart-google-reviews', {
-        type: 'bar',
-        data: { labels: facilities.map(function (f) { return f.name; }), datasets: [{ label: 'Rating', data: facilities.map(function (f) { return f.google_rating || 0; }), backgroundColor: facilities.map(function (f) { return f.name === 'Mountain Storage' ? 'rgba(34,197,94,0.95)' : 'rgba(34,211,238,0.85)'; }) }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(15,23,42,0.7)' }, min: 3.5, max: 5.1 } } }
-      });
+      var facs = reviews.facilities;
+      buildChart('chart-google-reviews', { type:'bar', data:{ labels:facs.map(function(f){return f.name;}), datasets:[{label:'Rating',data:facs.map(function(f){return f.google_rating||0;}),backgroundColor:facs.map(function(f){return f.name==='Mountain Storage'?'rgba(34,197,94,0.95)':'rgba(34,211,238,0.85)';})}]}, options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(15,23,42,0.7)'},min:3.5,max:5.1}}} });
     }
-
     if (competitors && competitors.facilities) {
-      var facilities2 = competitors.facilities;
-      buildChart('chart-office-hours', {
-        type: 'bar',
-        data: { labels: facilities2.map(function (f) { return f.name; }), datasets: [{ label: 'Office Hours / Week', data: facilities2.map(function (f) { return f.weekly_office_hours || 0; }), backgroundColor: facilities2.map(function (f) { return f.name === 'Mountain Storage' ? 'rgba(34,197,94,0.95)' : 'rgba(59,130,246,0.85)'; }) }] },
-        options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(15,23,42,0.7)' } } } }
-      });
+      var facs2 = competitors.facilities;
+      buildChart('chart-office-hours', { type:'bar', data:{ labels:facs2.map(function(f){return f.name;}), datasets:[{label:'Office Hours / Week',data:facs2.map(function(f){return f.weekly_office_hours||0;}),backgroundColor:facs2.map(function(f){return f.name==='Mountain Storage'?'rgba(34,197,94,0.95)':'rgba(59,130,246,0.85)';})}]}, options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(15,23,42,0.7)'}}}} });
     }
   }
 
   function initMap(competitors) {
-    if (!(window.L) || !competitors || !competitors.facilities) return;
+    if (!competitors || !competitors.facilities) return;
     var mapEl = document.getElementById('competition-map');
     if (!mapEl) return;
-    if (mapInstance) { mapInstance.remove(); mapInstance = null; mapMarkers = []; }
-    mapInstance = L.map('competition-map', { zoomControl: false }).setView([34.50, -93.05], 11);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '\u00a9 OpenStreetMap contributors' }).addTo(mapInstance);
-    var youIcon = L.divIcon({ className: 'custom-marker-you', html: '<div style="background:#22c55e;color:#fff;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;white-space:nowrap;">\u2605 YOU</div>', iconSize: [40, 20], iconAnchor: [20, 10] });
-    var compIcon = L.divIcon({ className: 'custom-marker-comp', html: '<div style="width:12px;height:12px;border-radius:50%;background:#22d3ee;border:2px solid #fff;"></div>', iconSize: [14, 14], iconAnchor: [7, 7] });
-    competitors.facilities.forEach(function (f, idx) {
+    /* Use static map image with CSS dot overlays */
+    var facilities = competitors.facilities;
+    /* Map bounds: lat 34.38-34.58, lng -93.15 to -92.95 */
+    var minLat = 34.38, maxLat = 34.58, minLng = -93.15, maxLng = -92.95;
+    var staticUrl = 'https://maps.geoapify.com/v1/staticmap?style=dark-matter-dark-grey&width=800&height=400&center=lonlat:-93.05,34.50&zoom=11&apiKey=demo';
+    mapEl.innerHTML = '';
+    mapEl.style.position = 'relative';
+    mapEl.style.background = 'linear-gradient(135deg, #0a1628 0%, #071020 50%, #050d1a 100%)';
+    mapEl.style.overflow = 'hidden';
+    /* Draw road-like grid lines for visual effect */
+    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('width','100%');
+    svg.setAttribute('height','100%');
+    svg.style.position = 'absolute';
+    svg.style.inset = '0';
+    svg.style.opacity = '0.15';
+    svg.innerHTML = '<line x1="10%" y1="0" x2="40%" y2="100%" stroke="#22d3ee" stroke-width="0.5"/><line x1="30%" y1="0" x2="70%" y2="100%" stroke="#22d3ee" stroke-width="0.5"/><line x1="60%" y1="0" x2="90%" y2="100%" stroke="#22d3ee" stroke-width="0.5"/><line x1="0" y1="25%" x2="100%" y2="30%" stroke="#22d3ee" stroke-width="0.5"/><line x1="0" y1="55%" x2="100%" y2="60%" stroke="#22d3ee" stroke-width="0.5"/><line x1="0" y1="80%" x2="100%" y2="75%" stroke="#22d3ee" stroke-width="0.5"/>';
+    mapEl.appendChild(svg);
+    /* Add label */
+    var label = document.createElement('div');
+    label.style.cssText = 'position:absolute;bottom:6px;left:8px;font-size:9px;color:rgba(148,163,184,0.5);z-index:2;';
+    label.textContent = 'Hot Springs, AR \u00b7 7mi radius';
+    mapEl.appendChild(label);
+    /* Place dots for each facility */
+    facilities.forEach(function(f, idx) {
       if (typeof f.lat !== 'number' || typeof f.lng !== 'number') return;
       var isYou = f.role === 'you';
-      var marker = L.marker([f.lat, f.lng], { icon: isYou ? youIcon : compIcon }).addTo(mapInstance);
-      marker.bindPopup('<b>' + f.name + '</b><br>' + (f.address || ''));
-      marker.on('click', function () { focusCard(idx); });
-      mapMarkers.push(marker);
+      var pctX = ((f.lng - minLng) / (maxLng - minLng)) * 100;
+      var pctY = ((maxLat - f.lat) / (maxLat - minLat)) * 100;
+      pctX = Math.max(5, Math.min(95, pctX));
+      pctY = Math.max(5, Math.min(95, pctY));
+      var dot = document.createElement('div');
+      dot.className = 'map-dot' + (isYou ? ' map-dot-you' : '');
+      dot.style.cssText = 'position:absolute;left:'+pctX+'%;top:'+pctY+'%;transform:translate(-50%,-50%);z-index:3;cursor:pointer;';
+      if (isYou) {
+        dot.innerHTML = '<div style="width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#bbf7d0,#22c55e);box-shadow:0 0 12px #22c55e,0 0 24px rgba(34,197,94,0.5);border:2px solid #bbf7d0;"></div><div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;font-weight:600;color:#bbf7d0;text-shadow:0 0 6px rgba(34,197,94,0.8);">\u2605 YOU</div>';
+      } else {
+        dot.innerHTML = '<div style="width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#67e8f9,#0891b2);box-shadow:0 0 8px rgba(34,211,238,0.6);border:1px solid #67e8f9;"></div>';
+      }
+      /* Popup on hover */
+      var popup = document.createElement('div');
+      popup.className = 'map-popup';
+      popup.style.cssText = 'display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(2,6,23,0.95);border:1px solid rgba(34,211,238,0.5);border-radius:8px;padding:8px 10px;min-width:180px;z-index:10;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.7);';
+      var ratingStr = f.google_rating ? f.google_rating.toFixed(1) + '\u2605 (' + (f.google_review_count||0) + ')' : '';
+      popup.innerHTML = '<div style="font-size:12px;font-weight:600;color:#e5f4ff;margin-bottom:3px;">' + f.name + '</div><div style="font-size:10px;color:#9ca3af;">' + (f.distance_mi != null ? f.distance_mi.toFixed(1) + 'mi \u00b7 ' : '') + (ratingStr) + '</div><div style="font-size:10px;color:#6b7280;margin-top:2px;">' + (f.address||'') + '</div>';
+      dot.appendChild(popup);
+      dot.addEventListener('mouseenter', function() { popup.style.display = 'block'; });
+      dot.addEventListener('mouseleave', function() { popup.style.display = 'none'; });
+      dot.addEventListener('click', function() { focusCard(idx); });
+      mapEl.appendChild(dot);
     });
-    setTimeout(function () { mapInstance.invalidateSize(); }, 300);
   }
 
-  function focusMarker(index) {
-    if (!mapInstance || !mapMarkers[index]) return;
-    var marker = mapMarkers[index];
-    mapInstance.setView(marker.getLatLng(), 13, { animate: true });
-    marker.openPopup();
-  }
+  function focusMarker(index) { /* no-op for static map */ }
 
   function focusCard(index) {
     var cards = Array.from(document.querySelectorAll('.competition-card'));
@@ -188,7 +172,6 @@
       if (idx === index) card.classList.add('active');
       else card.classList.remove('active');
     });
-    focusMarker(index);
   }
 
   function initCompetitionCards(competitors) {
@@ -232,7 +215,7 @@
           if (filter === '5' && rev.rating !== 5) return;
           var card = document.createElement('div');
           card.className = 'review-card';
-          card.innerHTML = '<div class="review-header"><span class="review-name">' + (rev.author || 'Customer') + '</span><span class="review-stars">' + '\u2605'.repeat(rev.rating || 5) + '</span></div>' +
+          card.innerHTML = '<div class="review-header"><span class="review-name">' + (rev.author || 'Customer') + '</span> <span class="review-stars">' + '\u2605'.repeat(rev.rating || 5) + '</span></div>' +
             '<div style="font-size:10px;color:#6b7280;margin-bottom:4px;">' + (facility.name || '') + (rev.date ? ' \u00b7 ' + rev.date : '') + '</div>' +
             '<div>' + (rev.text || '') + '</div>';
           container.appendChild(card);
@@ -284,7 +267,7 @@
       forecastEl.innerHTML = '';
       (w.forecast || []).forEach(function (d) {
         var span = document.createElement('div');
-        span.innerHTML = '<div>' + (d.day || '') + '</div><div style="color:#6b7280;">' + (d.conditions || '') + '</div><div>' + (d.high_f || '') + '\u00b0 / ' + (d.low_f || '') + '\u00b0</div>';
+        span.innerHTML = '<div style="font-weight:500;color:#e5f4ff;">' + (d.day || '') + '</div><div>' + (d.conditions || '') + '</div><div>' + (d.high_f || '') + '\u00b0 / ' + (d.low_f || '') + '\u00b0</div>';
         forecastEl.appendChild(span);
       });
     }
