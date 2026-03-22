@@ -1,0 +1,321 @@
+{
+  "last_updated": "2026-03-21T00:00:00-05:00",
+  "market": "Hot Springs, AR",
+  "base_address": "6422 Central Ave, Hot Springs, AR 71913",
+  "facilities": [
+    {
+      "name": "Mountain Storage",
+      "role": "you",
+      "address": "6422 Central Ave, Hot Springs, AR 71913",
+      "lat": 34.4575,
+      "lng": -93.0712,
+      "distance_mi": 0.0,
+      "gate_hours": "24/7",
+      "office_hours": "M 8:30-6, Tu-W Closed, Th-Sat 8:30-6, Sun 10-4",
+      "weekly_office_hours": 44,
+      "features": [
+        "24/7 Gate Access",
+        "U-Haul Dealer On Site",
+        "Cameras & Lighting",
+        "Online Leases"
+      ],
+      "google_rating": 5.0,
+      "google_review_count": 26,
+      "uhaul_rating": 4.9,
+      "uhaul_review_count": 22,
+      "promos": [
+        "50% off first 3 months"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 60, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 80, "billing": "month" },
+        { "size": "10x15", "climate": false, "price": 100, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 150, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 120, "billing": "month" }
+      ]
+    },
+    {
+      "name": "Mini Mall Storage",
+      "role": "competitor",
+      "address": "6045 Central Ave, Hot Springs, AR 71913",
+      "distance_mi": 1.0,
+      "gate_hours": "6AM-10PM",
+      "office_hours": "M-F 9-4:30, Sat-Sun Closed",
+      "weekly_office_hours": 37.5,
+      "features": [
+        "Drive-Up Units",
+        "RV/Boat Parking"
+      ],
+      "google_rating": 4.7,
+      "google_review_count": 19,
+      "promos": [
+        "1st month free ($29 activation fee)"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 11, "billing": "week" },
+        { "size": "10x10", "climate": false, "price": 31, "billing": "week" },
+        { "size": "10x20", "climate": false, "price": 31, "billing": "week" },
+        { "size": "10x25", "climate": false, "price": 35, "billing": "week" }
+      ]
+    },
+    {
+      "name": "Secure Space Storage",
+      "role": "competitor",
+      "address": "5820 Central Ave, Hot Springs, AR 71913",
+      "distance_mi": 1.2,
+      "gate_hours": "5AM-10PM",
+      "office_hours": "M-F 9-5, Sat 9-2, Sun Closed",
+      "weekly_office_hours": 45,
+      "features": [
+        "Formerly USA Storage",
+        "Drive-Up & Climate Units"
+      ],
+      "google_rating": 5.0,
+      "google_review_count": 5,
+      "promos": [
+        "1st full month free on select units"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 50, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 99, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 125, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 145, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 148, "billing": "month" }
+      ]
+    },
+    {
+      "name": "Hwy 7 South Storage",
+      "role": "competitor",
+      "address": "5737 Central Ave, Hot Springs, AR 71913",
+      "distance_mi": 1.5,
+      "gate_hours": "M-F 8-7, Sat 9-3, Sun Closed",
+      "office_hours": "Same as gate",
+      "weekly_office_hours": 61,
+      "features": [
+        "Electric Available in Some Units",
+        "Drive-Up Access"
+      ],
+      "google_rating": 4.6,
+      "google_review_count": 16,
+      "promos": [
+        "1st month free on all units"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 25, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 28, "billing": "month" },
+        { "size": "10x15", "climate": false, "price": 35, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 55, "billing": "month" },
+        { "size": "10x25", "climate": false, "price": 85, "billing": "month" }
+      ]
+    },
+    {
+      "name": "Modern Storage",
+      "role": "competitor",
+      "address": "2138 Higdon Ferry Rd, Hot Springs, AR 71913",
+      "distance_mi": 3.7,
+      "gate_hours": "6AM-10PM",
+      "office_hours": "M-Sat 8:30-5:30, Sun 1-6",
+      "weekly_office_hours": 59,
+      "features": [
+        "All Climate-Controlled",
+        "Premium Facility"
+      ],
+      "google_rating": 4.9,
+      "google_review_count": 244,
+      "promos": [
+        "Premium highest prices in market"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": true, "price": 105, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 139, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 199, "billing": "month" }
+      ]
+    },
+    {
+      "name": "New Frontier",
+      "role": "competitor",
+      "address": "170 Temperance Hill Rd, Hot Springs, AR 71913",
+      "distance_mi": 4.2,
+      "gate_hours": "6AM-9PM",
+      "office_hours": "M-F 8-5, Sat 8-2, Sun Closed",
+      "weekly_office_hours": 51,
+      "features": [
+        "Budget Facility",
+        "Drive-Up and Climate Units"
+      ],
+      "google_rating": 4.5,
+      "google_review_count": 147,
+      "promos": [
+        "$1 move-in",
+        "50% off 1st month on climate units"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 31, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 22, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 52, "billing": "month" },
+        { "size": "10x15", "climate": false, "price": 42, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 66, "billing": "month" }
+      ]
+    },
+    {
+      "name": "Central Access Storage",
+      "role": "competitor",
+      "address": "4250 Central Ave, Hot Springs, AR 71913",
+      "distance_mi": 4.2,
+      "gate_hours": "6AM-10PM",
+      "office_hours": "M,Tu,Th,F 10-4, Wed Closed, Sat 9-1, Sun Closed",
+      "weekly_office_hours": 28,
+      "features": [
+        "Bluetooth Gate Entry",
+        "Climate-Controlled Units"
+      ],
+      "google_rating": 4.3,
+      "google_review_count": 133,
+      "promos": [
+        "50% off first 3 months on select units"
+      ],
+      "unit_sizes": [
+        { "size": "5x5", "climate": true, "price": 27, "billing": "month" },
+        { "size": "5x10", "climate": true, "price": 37, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 34, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 40, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 62, "billing": "month" }
+      ]
+    },
+    {
+      "name": "S&S Storage S Moore",
+      "role": "competitor",
+      "address": "967 S Moore Rd, Hot Springs, AR 71913",
+      "distance_mi": 4.7,
+      "gate_hours": "24/7",
+      "office_hours": "M-F 8-5, Sat-Sun Closed",
+      "weekly_office_hours": 45,
+      "features": [
+        "24/7 Access",
+        "Climate Available"
+      ],
+      "google_rating": 4.0,
+      "google_review_count": 36,
+      "promos": [
+        "No current promos"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 60, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 80, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 135, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 155, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 115, "billing": "month" }
+      ]
+    },
+    {
+      "name": "S&S Storage Pearcy",
+      "role": "competitor",
+      "address": "3025 Airport Rd, Pearcy, AR 71964",
+      "distance_mi": 6.2,
+      "gate_hours": "24/7",
+      "office_hours": "M-F 8-5, Sat-Sun Closed",
+      "weekly_office_hours": 45,
+      "features": [
+        "Indoor Parking",
+        "24/7 Access"
+      ],
+      "google_rating": 4.0,
+      "google_review_count": 36,
+      "promos": [
+        "No current promos"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 60, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 80, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 135, "billing": "month" },
+        { "size": "10x15", "climate": true, "price": 155, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 115, "billing": "month" }
+      ]
+    },
+    {
+      "name": "Lake Hamilton Storage",
+      "role": "competitor",
+      "address": "226 Adam Brown Rd, Pearcy, AR 71964",
+      "distance_mi": 6.8,
+      "gate_hours": "24/7",
+      "office_hours": "M-F 10-5:30, Sun Closed",
+      "weekly_office_hours": 37.5,
+      "features": [
+        "RV/Boat Parking",
+        "24/7 Gate"
+      ],
+      "google_rating": 4.7,
+      "google_review_count": 16,
+      "promos": [
+        "Most units waitlisted; high demand"
+      ],
+      "unit_sizes": [
+        { "size": "5x10", "climate": false, "price": 35, "billing": "month" },
+        { "size": "10x10", "climate": false, "price": 60, "billing": "month" },
+        { "size": "10x15", "climate": false, "price": 75, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 90, "billing": "month" },
+        { "size": "10x30", "climate": false, "price": 110, "billing": "month" }
+      ]
+    },
+    {
+      "name": "Malvern Ave Storage",
+      "role": "competitor",
+      "address": "3868 Malvern Rd, Hot Springs, AR 71901",
+      "distance_mi": 7.0,
+      "gate_hours": "5AM-10PM",
+      "office_hours": "M-F 8-5, Sat-Sun Closed",
+      "weekly_office_hours": 45,
+      "features": [
+        "Mid-Range Facility"
+      ],
+      "google_rating": 4.6,
+      "google_review_count": 16,
+      "promos": [
+        "1st full month free"
+      ],
+      "unit_sizes": [
+        { "size": "10x10", "climate": false, "price": 65, "billing": "month" },
+        { "size": "10x10", "climate": true, "price": 85, "billing": "month" },
+        { "size": "10x15", "climate": false, "price": 75, "billing": "month" },
+        { "size": "10x20", "climate": false, "price": 85, "billing": "month" }
+      ]
+    }
+  ],
+  "comparisons": {
+    "non_climate_10x10": {
+      "label": "10x10 Non-Climate Monthly Rates",
+      "unit": "USD",
+      "facilities": [
+        { "name": "Mountain Storage", "price": 80 },
+        { "name": "Mini Mall Storage", "price": 31, "billing": "week" },
+        { "name": "Secure Space Storage", "price": 99 },
+        { "name": "Hwy 7 South Storage", "price": 28 },
+        { "name": "Modern Storage", "price": null },
+        { "name": "New Frontier", "price": 22 },
+        { "name": "Central Access Storage", "price": 34 },
+        { "name": "S&S Storage S Moore", "price": 80 },
+        { "name": "S&S Storage Pearcy", "price": 80 },
+        { "name": "Lake Hamilton Storage", "price": 60 },
+        { "name": "Malvern Ave Storage", "price": 65 }
+      ]
+    },
+    "climate_pricing": {
+      "label": "Climate-Controlled Pricing",
+      "unit": "USD",
+      "examples": [
+        { "name": "Mountain Storage", "size": "10x15", "price": 150 },
+        { "name": "Secure Space Storage", "size": "10x10", "price": 125 },
+        { "name": "Secure Space Storage", "size": "10x15", "price": 145 },
+        { "name": "Modern Storage", "size": "10x10", "price": 139 },
+        { "name": "Modern Storage", "size": "10x15", "price": 199 },
+        { "name": "New Frontier", "size": "10x10", "price": 52 },
+        { "name": "New Frontier", "size": "10x15", "price": 66 },
+        { "name": "Central Access Storage", "size": "10x10", "price": 40 },
+        { "name": "Central Access Storage", "size": "10x15", "price": 62 },
+        { "name": "S&S Storage S Moore", "size": "10x10", "price": 135 },
+        { "name": "S&S Storage Pearcy", "size": "10x10", "price": 135 },
+        { "name": "Malvern Ave Storage", "size": "10x10", "price": 85 }
+      ]
+    }
+  }
+}
