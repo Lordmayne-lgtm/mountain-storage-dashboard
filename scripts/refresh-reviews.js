@@ -16,7 +16,7 @@ if (!GOOGLE_API_KEY) {
 
 const FACILITIES = [
   { name: "Mountain Storage", placeId: "ChIJjeBQawArM4YR74Wn2wR_1RY", includeUhaul: true },
-  { name: "Mini Mall Storage", placeId: "ChIJd46H4ljVMoYRLBgAyr4nIWA" },
+    { name: "Mini Mall Storage", placeId: "ChIJH3O0p8nVMoYRYg_5PNB1zxA" },
   { name: "Secure Space Storage", placeId: "ChIJLxAIsIDVMoYRBtrvbr2SLE0" },
   { name: "Hwy 7 South Storage", placeId: "ChIJdbKxCJ7VMoYRKP3zNSEno-E" },
   { name: "Modern Storage", placeId: "ChIJncH3MQbVMoYRLi7t8jXJGfw" },
