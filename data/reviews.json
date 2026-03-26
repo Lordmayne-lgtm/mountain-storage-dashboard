@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-25T10:34:57.594Z",
+  "last_updated": "2026-03-26T11:15:30.055Z",
   "facilities": [
     {
       "name": "Mountain Storage",
@@ -195,7 +195,7 @@
       "name": "New Frontier",
       "google_place_id": "ChIJ_6XC5jjVMoYRZaVYEW0_9CI",
       "google_rating": 4.5,
-      "google_review_count": 150,
+      "google_review_count": 151,
       "google_reviews": [
         {
           "author": "Yung DraDo",
@@ -224,7 +224,7 @@
         {
           "author": "Mario",
           "rating": 5,
-          "date": "2 weeks ago",
+          "date": "3 weeks ago",
           "text": "Great staff, great facility. Jasmine is wonderful!"
         }
       ]
