@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-23T11:10:53.554Z",
+  "last_updated": "2026-03-30T11:38:07.040Z",
   "market": "Hot Springs, AR",
   "base_address": "6422 Central Ave, Hot Springs, AR 71913",
   "facilities": [
@@ -20,7 +20,7 @@
         "Online Leases"
       ],
       "google_rating": 5,
-      "google_review_count": 27,
+      "google_review_count": 28,
       "uhaul_rating": 4.9,
       "uhaul_review_count": 22,
       "promos": [
@@ -223,8 +223,8 @@
         "All Climate-Controlled",
         "Premium Facility"
       ],
-      "google_rating": 5,
-      "google_review_count": 260,
+      "google_rating": 4.9,
+      "google_review_count": 267,
       "promos": [
         "Premium highest prices in market"
       ],
@@ -264,7 +264,7 @@
         "Drive-Up and Climate Units"
       ],
       "google_rating": 4.5,
-      "google_review_count": 149,
+      "google_review_count": 154,
       "promos": [
         "$1 move-in",
         "50% off 1st month on climate units"
@@ -524,7 +524,7 @@
         "Mid-Range Facility"
       ],
       "google_rating": 4.6,
-      "google_review_count": 16,
+      "google_review_count": 17,
       "promos": [
         "1st full month free"
       ],
